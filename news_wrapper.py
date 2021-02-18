@@ -27,7 +27,7 @@ class NewsScraper:
     def getArticleList(self):
         article_list = []
         try:
-            articles = self._find_articles()
+            articles = self.__find_articles()
             for a in articles[:5]:
                 title = a.find('title').text
                 description = a.find('description').text
@@ -41,12 +41,12 @@ class NewsScraper:
             print('The scraping job failed. See exception: ')
             print(e)
 
-    def _find_articles(self):
-        xml = self._getResponse()
+    def __find_articles(self):
+        xml = self.getResponse()
         soup = BeautifulSoup(xml, features='xml')
         articles = soup.findAll('item')
         return articles
 
-    def _getResponse(self):
+    def getResponse(self):
         r = requests.get(self.feed_url)
         return r.content

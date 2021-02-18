@@ -6,8 +6,8 @@ from news_wrapper import NewsScraper
 
 class TestNewsScraper(TestCase):
 
-    @patch('news_wrapper.NewsScraper._getResponse')
-    def test_get_article_list1(self, mock__getResponse):
+    @patch('news_wrapper.NewsScraper.getResponse')
+    def test_get_article_list1(self, mock_getResponse):
         inst = NewsScraper.getInstance('http://127.0.0.1')
         ml = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<rss version="2.0" ' \
              b'xmlns:content="http://purl.org/rss/1.0/modules/content/">\n  <channel>\n    <title>tagesschau.de - Die ' \
@@ -710,7 +710,7 @@ class TestNewsScraper(TestCase):
              b'href="https://www.rbb24.de/panorama/beitrag/2021/02/berlin-brandenburg-clans-kriminalitaet' \
              b'-grosseinsatz-razzia-polizei-lka.html">rbb</a>\n        </p>\n        <ul>\n                \n         ' \
              b'   </ul>\n        </p>\n        \n    ]]></content:encoded>\n    </item>\n  </channel>\n</rss>\n '
-        mock__getResponse.return_value = ml
+        mock_getResponse.return_value = ml
         res1 = inst.getArticleList()
         expected_res1 = [{'title': 'NASA-Rover "Perseverance" gelingt Mars-Landung',
                           'description': 'Der NASA-Rover "Perseverance" ist nach sechs Monaten Flugzeit erfolgreich '
@@ -734,26 +734,26 @@ class TestNewsScraper(TestCase):
                           'description': 'Die Proteste in Myanmar gegen die Militärjunta nehmen neue Formen an: Autos und Motorräder blockieren die Straßen, Hacker greifen Webseiten der Armee an. Auch der internationale Druck auf das Militär steigt.'}]
         self.assertEqual(expected_res1, res1)
 
-    @patch('news_wrapper.NewsScraper._getResponse')
-    def test_get_article_list2(self, mock__getResponse):
+    @patch('news_wrapper.NewsScraper.getResponse')
+    def test_get_article_list2(self, mock_getResponse):
         inst = NewsScraper.getInstance('http://127.0.0.1')
-        mock__getResponse.return_value = []
+        mock_getResponse.return_value = []
         res2 = inst.getArticleList()
         expected_res2 = None
         self.assertEqual(expected_res2, res2)
 
-    @patch('news_wrapper.NewsScraper._getResponse')
-    def test_get_article_list3(self, mock__getResponse):
+    @patch('news_wrapper.NewsScraper.getResponse')
+    def test_get_article_list3(self, mock_getResponse):
         inst = NewsScraper.getInstance('http://127.0.0.1')
-        mock__getResponse.return_value = None
+        mock_getResponse.return_value = None
         res3 = inst.getArticleList()
         expected_res3 = None
         self.assertEqual(expected_res3, res3)
 
-    @patch('news_wrapper.NewsScraper._getResponse')
-    def test_get_article_list4(self, mock__getResponse):
+    @patch('news_wrapper.NewsScraper.getResponse')
+    def test_get_article_list4(self, mock_getResponse):
         inst = NewsScraper.getInstance('http://127.0.0.1')
-        mock__getResponse.return_value = b' <a id="x">1</a><A id="a">2</a><b id="b">3</a><b href="foo" id="x">4</a><ac width=100>4</ac>'
+        mock_getResponse.return_value = b' <a id="x">1</a><A id="a">2</a><b id="b">3</a><b href="foo" id="x">4</a><ac width=100>4</ac>'
         res4 = inst.getArticleList()
         expected_res4 = []
         self.assertEqual(expected_res4, res4)
