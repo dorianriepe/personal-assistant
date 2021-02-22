@@ -80,7 +80,7 @@ class Calendar:
 
     def get_first_event_tomorrow(self):
 
-        tomorrow = datetime.now()
+        tomorrow = datetime.now() + timedelta(days=1)
 
         events = self._get_events_for_day(tomorrow)
 
