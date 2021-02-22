@@ -37,12 +37,10 @@ class Calendar:
         self.service = service
         self.calendar_id = calendar_id
 
-    def get_events_today(self):
+    def _get_events_for_day(self, day):
         
-        now = datetime.now()
-        
-        time_min = now.replace(hour=00, minute=00, second=00)
-        time_max = now.replace(hour=23, minute=59, second=59)
+        time_min = day.replace(hour=00, minute=00, second=00)
+        time_max = day.replace(hour=23, minute=59, second=59)
         
         time_min = time_min.strftime("%Y-%m-%dT%H:%M:%SZ")
         time_max = time_max.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -69,41 +67,22 @@ class Calendar:
                 location = ""
 
             events.append({"title": title, "location": location, "start": event_start, "end": event_end})
+
+        return events 
+
+    def get_events_today(self):
+        
+        today = datetime.now()
+
+        events = self._get_events_for_day(today)
 
         return events
 
     def get_first_event_tomorrow(self):
-        
-        now = datetime.now() + timedelta(days=1)
-        
-        time_min = now.replace(hour=00, minute=00, second=00)
-        time_max = now.replace(hour=23, minute=59, second=59)
-        
-        time_min = time_min.strftime("%Y-%m-%dT%H:%M:%SZ")
-        time_max = time_max.strftime("%Y-%m-%dT%H:%M:%SZ")
-        
-        response = self.service.events().list(calendarId=self.calendar_id, timeMin=time_min, timeMax=time_max).execute()
 
-        events = []
+        tomorrow = datetime.now()
 
-        for event in response["items"]:
-
-            try:
-                event_start = datetime.strptime(event["start"]["dateTime"], '%Y-%m-%dT%H:%M:%S%z')
-                event_end = datetime.strptime(event["end"]["dateTime"], '%Y-%m-%dT%H:%M:%S%z')
-            except KeyError:
-                continue
-
-            event_start = event_start.strftime("%H:%M")
-            event_end = event_end.strftime("%H:%M")
-
-            title = event["summary"]
-            if "location" in event:
-                location = event["location"]
-            else: 
-                location = ""
-
-            events.append({"title": title, "location": location, "start": event_start, "end": event_end})
+        events = self._get_events_for_day(tomorrow)
 
         if len(events) > 0:
             return events[0]
