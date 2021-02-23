@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 import json
+import os
 
 from recipe_wrapper import RecipeWrapper
 
@@ -10,7 +11,8 @@ class TestRecipeWrapper(TestCase):
     @patch('recipe_wrapper.RecipeWrapper._get_response')
     def test_get_recipe1(self, mock__get_response):
         inst = RecipeWrapper.getInstance('http://127.0.0.1')
-        ml = json.loads(open("response1.json", "r").read())
+        test_path = os.path.join("test-responses", "response1.json")
+        ml = json.loads(open(test_path, "r").read())
         
         mock__get_response.return_value = ml
         res = inst.get_recipe("noodles, chicken, pepper, milk", random_recipes=False)
@@ -22,7 +24,8 @@ class TestRecipeWrapper(TestCase):
     @patch('recipe_wrapper.RecipeWrapper._get_response')
     def test_get_recipe2(self, mock__get_response):
         inst = RecipeWrapper.getInstance('http://127.0.0.1')
-        ml = json.loads(open("response2.json", "r").read())
+        test_path = os.path.join("test-responses", "response2.json")
+        ml = json.loads(open(test_path, "r").read())
         
         mock__get_response.return_value = ml
         res = inst.get_recipe("noodles, chicken, pepper, milk", random_recipes=False, diet="low-fat")
@@ -33,7 +36,8 @@ class TestRecipeWrapper(TestCase):
     @patch('recipe_wrapper.RecipeWrapper._get_response')
     def test_get_recipe3(self, mock__get_response):
         inst = RecipeWrapper.getInstance('http://127.0.0.1')
-        ml = json.loads(open("response3.json", "r").read())
+        test_path = os.path.join("test-responses", "response3.json")
+        ml = json.loads(open(test_path, "r").read())
         
         mock__get_response.return_value = ml
         res = inst.get_recipe("noodles, onion, pepper", random_recipes=False, health="vegan")
@@ -44,7 +48,8 @@ class TestRecipeWrapper(TestCase):
     @patch('recipe_wrapper.RecipeWrapper._get_response')
     def test_get_recipe4(self, mock__get_response):
         inst = RecipeWrapper.getInstance('http://127.0.0.1')
-        ml = json.loads(open("response4.json", "r").read())
+        test_path = os.path.join("test-responses", "response4.json")
+        ml = json.loads(open(test_path, "r").read())
         
         mock__get_response.return_value = ml
         res = inst.get_recipe("noodles, chicken, pepper, egg", random_recipes=False, health="vegan")
