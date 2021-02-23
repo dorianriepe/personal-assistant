@@ -10,8 +10,8 @@ class Testing(unittest.TestCase):
         
         tasks = Tasks()
 
-        response = tasks._get_list_id("Einkaufen")
-        list_id = "eVp3NkZtSm9mWk5ydGxRcw"
+        response = tasks._get_list_id("Test Google Tasks")
+        list_id = "VEhDejNacGU1NTNyb09RZg"
 
         self.assertEqual(response, list_id)
     
@@ -19,8 +19,8 @@ class Testing(unittest.TestCase):
         
         tasks = Tasks()
 
-        response = tasks._get_tasks("eVp3NkZtSm9mWk5ydGxRcw")
-        response_exp = {'kind': 'tasks#tasks', 'etag': '\"LTg3MzE0MDkyOQ\"'}
+        response = tasks._get_tasks("VEhDejNacGU1NTNyb09RZg")
+        response_exp = {'kind': 'tasks#tasks', 'etag': '\"LTgzODU3NDY5NQ\"'}
 
         self.assertEqual(response, response_exp)
     
