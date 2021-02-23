@@ -20,6 +20,7 @@ class RecipeWrapper:
         else:
             raise Exception("This class is a singleton!")
 
+            
     def setRecipeUrl(self, recipe_url):
         self.recipe_url = recipe_url
 
