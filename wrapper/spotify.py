@@ -1,13 +1,14 @@
 import json
 import requests
+import os
 
 
 class Spotify:
     def __init__(self):
-        self.client_id = "b7374cf69aef4e9cb34f5d0e6b7b203b"
-        self.client_secret = "80731b4611664a1cb4166f4630c7ff35"
-        self.token = "BQCtCaZH5uPwj1r7rSHzUC1tno8UF4eUYFglOoFuTXvMO7qnLfGsq3Wqys6b2zyNYbKNx6XIiSHANzRkuh9dH2YjXPofCycV5JQ1AozSKLLMirBp30LwhXLtfXI3GMWwpkEzptSwj7vpWznaxeLs_CcJjF4"
-        self.refresh_token = "AQAiSb5pA-_hmnNc9tvNk0nh5LhQbsEAlubwXEybvXfpK59XF1SruJ7PlZNx-oQ_kE4vs8TUfwObYwvtHLbWIAksvPgyyR7ytNNPZNehejyCZcmz6gAfgrgYGvUXFO69eqE"
+        self.client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+        self.client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+        self.token = os.environ.get('SPOTIFY_TOKEN')
+        self.refresh_token = os.environ.get('SPOTIFY_REFRESH_TOKEN')
         self.api_url = "https://api.spotify.com"
 
     def request_new_token(self):
@@ -49,12 +50,12 @@ class Spotify:
         response = self.get_request(ENDPOINT)
         return response.json()
 
-    def get_device_id(self):
+    def get_device_id(self, device_name):
         ENDPOINT = "/v1/me/player/devices"
         response = self.get_request(ENDPOINT)
         response = response.json()
         for device in response['devices']:
-            if device['name'] == "Pixel 5":
+            if device['name'] == device_name:
                 self.deviceID = device['id']
 
     def get_playlist(self, playlist_type):
@@ -73,24 +74,21 @@ class Spotify:
             list_of_playlists.append(playlist_dict)
         return list_of_playlists
 
-    '''
     def start_playback(self, playlist_uri):
         if self.deviceID:
             ENDPOINT = "/v1/me/player/play?device_id=%s" % self.deviceID
-            data = {"context_uri": "spotify:playlist:2237sMNMlXS4wWLgdQ1UuV"}
+            data = {"context_uri": playlist_uri}
 
-            response = requests.put(self.api_url+ENDPOINT, data=data, headers={
+            response = requests.put(self.api_url+ENDPOINT, data=json.dumps(data), headers={
                                     "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + self.token})
 
             status_code = response.status_code
-            print(str(status_code))
             if status_code == 401:
                 self.request_new_token()
                 response = requests.put(self.api_url+ENDPOINT, data=data, headers={
                                         "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + self.token})
         else:
             print("Error no DeviceID")
-    '''
 
     def pause_playback(self):
         if self.deviceID:
