@@ -1,3 +1,4 @@
+import os
 import json
 import urllib.request
 from collections import defaultdict
@@ -13,13 +14,16 @@ def multi_dict(K, type):
 
 class Weather:
 
+    def _get_current_time(self):
+        return datetime.now()
+
     def get_forecast(self):
         
         text = ""
         for i, day in enumerate(self.weather_data.values()):
             
             for hour, hour_data in day.items():
-                if i > 0 or datetime.now().hour*100 < int(hour):
+                if i > 0 or self._get_current_time().hour*100 < int(hour):
                     text += str(int(int(hour)/100))+":00"
                     text += hour_data["weatherDesc"]
                     text += hour_data["tempC"]
@@ -48,39 +52,33 @@ class Weather:
     def get_current_weather(self):
         return "Currently it's "+self.current_weatherDesc+" at "+self.current_temp_C+" degrees."
 
+    def _get_json_weather(self, location):
+        try:
+            url = "http://wttr.in/"+location+"?format=j1"
+            response = urllib.request.urlopen(url)
+            data = response.read()
+            values = json.loads(data)
+        except urllib.error.HTTPError:
+            response_path = os.path.join("weather-response", "weather.json")
+            values = json.loads(open(response_path, "r").read())
+        return values
+
     def __init__(self,location):
 
-        
-  
-      
-        
         # Initialize dictionary 
         self.weather_data={}
-        
         
         # Using defaultdict() 
         # Creating Multidimensional dictionary 
         # calling function 
         self.weather_data = multi_dict(3, str) 
         
-         
-
-        
-        
-    
-        url = "http://wttr.in/"+location+"?format=j1"
-        response = urllib.request.urlopen(url)
-        data = response.read()
-        values = json.loads(data)
+        values = self._get_json_weather(location)
 
         current_weather = values['current_condition'][0]
        
         self.current_temp_C = current_weather['temp_C']
         self.current_weatherDesc = current_weather["weatherDesc"][0]["value"]
-    
-       
-
-        
 
         for day in values['weather']:
             
