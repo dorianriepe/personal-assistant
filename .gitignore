@@ -1,1 +1,7 @@
+.DS_Store
+client-secret.json
+tasks-client-secret.json
+credentials.pkl
+tasks-credentials.pkl
+/.idea
 *.pyc
