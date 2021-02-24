@@ -26,10 +26,10 @@ class Bundesliga:
                     "teamIconUrl": club['TeamIconUrl']
                 }
                 club_dicts.append(club_dict)
-
-            return club_dicts
         else:
             print('An error has occurred.')
+            
+        return club_dicts
 
     def set_myclub(self, clubID):
         self.clubID = clubID
