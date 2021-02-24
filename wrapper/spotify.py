@@ -10,6 +10,7 @@ class Spotify:
         self.token = os.environ.get('SPOTIFY_TOKEN')
         self.refresh_token = os.environ.get('SPOTIFY_REFRESH_TOKEN')
         self.api_url = "https://api.spotify.com"
+        self.deviceID = ""
 
     def request_new_token(self):
         # REQUEST NEW TOKEN:
@@ -34,7 +35,7 @@ class Spotify:
             self.request_new_token()
             response = requests.get(self.api_url+endpoint, headers={"Accept": "application/json", "Content-Type": "application/json",
                                                                     "Authorization": "Bearer " + self.token})
-        return response
+        return response.json()
 
     def put_request(self, endpoint):
         response = requests.put(self.api_url+endpoint, headers={"Accept": "application/json", "Content-Type": "application/json",
@@ -48,12 +49,11 @@ class Spotify:
     def get_current_playing(self):
         ENDPOINT = "/v1/me/player/currently-playing?market=DE"
         response = self.get_request(ENDPOINT)
-        return response.json()
+        return response
 
     def get_device_id(self, device_name):
         ENDPOINT = "/v1/me/player/devices"
         response = self.get_request(ENDPOINT)
-        response = response.json()
         for device in response['devices']:
             if device['name'] == device_name:
                 self.deviceID = device['id']
@@ -61,7 +61,6 @@ class Spotify:
     def get_playlist(self, playlist_type):
         ENDPOINT = "/v1/search?q=%s&type=playlist&market=DE" % playlist_type
         response = self.get_request(ENDPOINT)
-        response = response.json()
         list_of_playlists = []
         for playlist in response['playlists']['items']:
             playlist_dict = {

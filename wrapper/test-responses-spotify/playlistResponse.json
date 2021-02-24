@@ -1,0 +1,43 @@
+{
+    "playlists": {
+        "href": "https://api.spotify.com/v1/search?query=workout&type=playlist&market=DE&offset=0&limit=20",
+        "items": [
+            {
+                "collaborative": false,
+                "description": "These songs will get you motivated! The best playlist on Spotify for your Workouts (at home). Follow and get motivated🏆",
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/playlist/2237sMNMlXS4wWLgdQ1UuV"
+                },
+                "href": "https://api.spotify.com/v1/playlists/2237sMNMlXS4wWLgdQ1UuV",
+                "id": "2237sMNMlXS4wWLgdQ1UuV",
+                "images": [
+                    {
+                        "height": null,
+                        "url": "https://i.scdn.co/image/ab67706c0000bebb962c73acdda7a8a9d07a523c",
+                        "width": null
+                    }
+                ],
+                "name": "Workout Motivation 2020💪",
+                "owner": {
+                    "display_name": "Jay Culter",
+                    "external_urls": {
+                        "spotify": "https://open.spotify.com/user/0m032eeptq5o63mbnwtfpybct"
+                    },
+                    "href": "https://api.spotify.com/v1/users/0m032eeptq5o63mbnwtfpybct",
+                    "id": "0m032eeptq5o63mbnwtfpybct",
+                    "type": "user",
+                    "uri": "spotify:user:0m032eeptq5o63mbnwtfpybct"
+                },
+                "primary_color": null,
+                "public": null,
+                "snapshot_id": "NzIyNyxhMjI1NmVhNDRmZDkwODUyMTJhMDE2MmExMzI0NzhiNzMxNzNlOTNm",
+                "tracks": {
+                    "href": "https://api.spotify.com/v1/playlists/2237sMNMlXS4wWLgdQ1UuV/tracks",
+                    "total": 215
+                },
+                "type": "playlist",
+                "uri": "spotify:playlist:2237sMNMlXS4wWLgdQ1UuV"
+            }
+        ]
+    }
+}
