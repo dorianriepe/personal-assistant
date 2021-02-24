@@ -2,14 +2,13 @@ import unittest
 from unittest.mock import patch
 import json
 import os
-import pickle
 
 from spotify import Spotify
 
 
 class TestSpotifyWrapper(unittest.TestCase):
 
-    @patch('spotify.Spotify.get_current_playing')
+    @patch('spotify.Spotify.get_request')
     def test_get_current_playing(self, mock__get_response):
 
         spotify = Spotify()
