@@ -18,10 +18,10 @@ class Weather:
         return datetime.now()
 
     def get_forecast(self):
-        
+
         text = ""
         for i, day in enumerate(self.weather_data.values()):
-            
+
             for hour, hour_data in day.items():
                 if i > 0 or self._get_current_time().hour*100 < int(hour):
                     text += str(int(int(hour)/100))+":00"
@@ -29,7 +29,7 @@ class Weather:
                     text += hour_data["tempC"]
                     text += hour_data["chanceofrain"]
         return text
-    
+
     def get_evening_forecast(self):
         text = ""
         tomorrow = list(self.weather_data)[1]
@@ -63,36 +63,28 @@ class Weather:
             values = json.loads(open(response_path, "r").read())
         return values
 
-    def __init__(self,location):
-
-        # Initialize dictionary 
-        self.weather_data={}
-        
-        # Using defaultdict() 
-        # Creating Multidimensional dictionary 
-        # calling function 
-        self.weather_data = multi_dict(3, str) 
-        
+    def _load_weather_data(self, location):
         values = self._get_json_weather(location)
 
         current_weather = values['current_condition'][0]
-       
+
         self.current_temp_C = current_weather['temp_C']
         self.current_weatherDesc = current_weather["weatherDesc"][0]["value"]
 
         for day in values['weather']:
-            
+
             for hourly in day['hourly']:
                 self.weather_data[day["date"]][hourly["time"]]["tempC"]=hourly["tempC"]
                 self.weather_data[day["date"]][hourly["time"]]["chanceofrain"]=hourly["chanceofrain"]
                 self.weather_data[day["date"]][hourly["time"]]["weatherDesc"]=hourly["weatherDesc"][0]["value"]
 
+    def __init__(self,location):
 
-                
-
-            
-
-            
-
-
+        # Initialize dictionary 
+        self.weather_data={}
         
+        # Creating Multidimensional dictionary using defaultdict() 
+        self.weather_data = multi_dict(3, str)
+
+        # Load current weather data
+        self._load_weather_data(location)
