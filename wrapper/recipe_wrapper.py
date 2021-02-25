@@ -20,14 +20,13 @@ class RecipeWrapper:
         else:
             raise Exception("This class is a singleton!")
 
-            
     def setRecipeUrl(self, recipe_url):
         self.recipe_url = recipe_url
 
     def getRecipeUrl(self):
         return self.recipe_url
 
-    def _get_response(self, querystring):
+    def get_response(self, querystring):
         return requests.request("GET", self.recipe_url, params=querystring).json()
 
     def get_recipe(self, ingredients, random_recipes=True, diet="balanced", health=None):
@@ -45,7 +44,7 @@ class RecipeWrapper:
         if health:
             querystring["health"] = health
 
-        response_json = self._get_response(querystring)
+        response_json = self.get_response(querystring)
 
         if response_json:
             recipe_number = 0
