@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+        $(document).ready(
+            function(){
+                $("button").click(function(){
+                        
+                        //POST
+                        var data = {};
+                        data["text"] = $("#text-input").val();
+
+                        $.ajax(
+                            {
+                                type: "POST",
+                                url: "http://localhost:8000/coordinator/",
+                                //data: {"text": "Wann ist mein nächster Termin"},
+                                data: data,
+                                success: function(result){
+                                    console.log(result)
+                                    $("#div1").html(result.html);
+                                },
+                                dataType: "json"
+                            }
+                        );
+                        
+
+                    }
+                );
+            }
+        );
+        </script>
+    </head>
+    
+    <body>
+
+        <div id="title"><h1>Personal Assistant</h1></div>
+        <div id="div1">Wie kann ich dir helfen?</div>
+        <input type="text" id="text-input">
+        <button>POST</button>
+
+    </body>
+</html>
+
