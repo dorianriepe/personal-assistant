@@ -2,10 +2,10 @@
 
 ## Run Server
 
-1. Start Server
+1. `pip install Django`
 
-```bash
-python3 assistant/manage.py runserver
-```
+2. `pip install django-cors-headers`
 
-2. Go to [localhost:8000](http://localhost:8000/)
+3. Start Server `python3 assistant/manage.py runserver`
+
+4. Open [localhost:8000](http://localhost:8000/)
