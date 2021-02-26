@@ -79,6 +79,11 @@ TEMPLATES = [
     },
 ]
 
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, 'testview', 'static'),
+)
+
+
 WSGI_APPLICATION = 'assistant.wsgi.application'
 
 

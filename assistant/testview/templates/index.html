@@ -1,46 +1,39 @@
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>
-        $(document).ready(
-            function(){
-                $("button").click(function(){
-                        
-                        //POST
-                        var data = {};
-                        data["text"] = $("#text-input").val();
-
-                        $.ajax(
-                            {
-                                type: "POST",
-                                url: "http://localhost:8000/coordinator/",
-                                //data: {"text": "Wann ist mein nächster Termin"},
-                                data: data,
-                                success: function(result){
-                                    console.log(result)
-                                    $("#div1").html(result.html);
-                                },
-                                dataType: "json"
-                            }
-                        );
-                        
-
-                    }
-                );
-            }
-        );
-        </script>
-    </head>
-    
-    <body>
-
-        <div id="title"><h1>Personal Assistant</h1></div>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Web Speech APIU</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'web-speech.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<main>
+    <div class="container mt-3">
+        <h3 class="text-center">Web Speech API Demo</h3>
+        <div id="info"></div>
         <div id="div1">Wie kann ich dir helfen?</div>
-        <input type="text" id="text-input">
-        <button>POST</button>
+        <div class="float-right">
+            <button id="start_button">
+                <img id="start_img" src="../static/images/mic.gif" alt="Start"></button>
+        </div>
+        <div id="results">
+            <span id="final_span" class="final"></span>
+            <span id="interim_span" class="interim"></span>
+            <p>
+        </div>
+            <div class="col-12 col-md-4 col-lg-6 mt-3 mt-md-0 p-0 m-0">
+                <div class="float-right">
+                    <button id="ajax_button" class="btn btn-primary ">POST</button>
+                </div>
+            </div>
+        </div>
 
-    </body>
+</main>
+<script src="{% static 'js/languages.js' %}"></script>
+<script src="{% static 'js/web-speech-api.js' %}"></script>
+</body>
 </html>
 
