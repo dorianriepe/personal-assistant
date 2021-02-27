@@ -8,7 +8,7 @@ TOKEN = os.environ.get('BAHN_TOKEN')
 
 class Bahn:
 
-    def _get_station_id(self, station):
+    def get_station_id(self, station):
 
         station = urllib.parse.quote(station)
 
@@ -29,10 +29,10 @@ class Bahn:
 
     def __init__(self, station):
 
-        self.station_id = self._get_station_id(station)
+        self.station_id = self.get_station_id(station)
 
 
-    def _get_departures_for_time(self, time):
+    def get_departures_for_time(self, time):
         
         day = time.strftime("%y%m%d")
         hour = time.strftime("%H")
@@ -85,8 +85,8 @@ class Bahn:
         now = datetime.now()
         now_p1 = now + timedelta(hours=1)
 
-        next_departures = self._get_departures_for_time(now)
-        next_departures = next_departures + self._get_departures_for_time(now_p1)
+        next_departures = self.get_departures_for_time(now)
+        next_departures = next_departures + self.get_departures_for_time(now_p1)
 
         next_departures = sorted(next_departures, key=lambda k: k['time'])
 
