@@ -26,7 +26,7 @@ class Tasks:
 
         self.service = service
     
-    def _get_list_id(self, list_name):
+    def get_list_id(self, list_name):
         
         results = self.service.tasklists().list().execute()
         items = results["items"]
@@ -42,7 +42,7 @@ class Tasks:
 
         return list_id
 
-    def _get_tasks(self, list_id):
+    def get_tasks(self, list_id):
         
         response = self.service.tasks().list(tasklist=list_id).execute()
 
@@ -50,9 +50,9 @@ class Tasks:
 
     def get_tasks_from_list(self, list_name):
         
-        list_id = self._get_list_id(list_name)
+        list_id = self.get_list_id(list_name)
 
-        response = self._get_tasks(list_id)
+        response = self.get_tasks(list_id)
 
         tasks = []
 
@@ -65,7 +65,7 @@ class Tasks:
 
     def add_task_to_list(self, list_name, task_name):
         
-        list_id = self._get_list_id(list_name)
+        list_id = self.get_list_id(list_name)
 
         task = {'title': task_name}
         response = self.service.tasks().insert(tasklist=list_id, body=task).execute()
