@@ -37,7 +37,7 @@ class Calendar:
         self.service = service
         self.calendar_id = calendar_id
 
-    def _get_events_for_day(self, day):
+    def get_events_for_day(self, day):
         
         time_min = day.replace(hour=00, minute=00, second=00)
         time_max = day.replace(hour=23, minute=59, second=59)
@@ -74,7 +74,7 @@ class Calendar:
         
         today = datetime.now()
 
-        events = self._get_events_for_day(today)
+        events = self.get_events_for_day(today)
 
         return events
 
@@ -82,7 +82,7 @@ class Calendar:
 
         tomorrow = datetime.now() + timedelta(days=1)
 
-        events = self._get_events_for_day(tomorrow)
+        events = self.get_events_for_day(tomorrow)
 
         if len(events) > 0:
             return events[0]
