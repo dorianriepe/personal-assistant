@@ -52,8 +52,8 @@ def index(request):
         
         else:
             response = {
-                "text": "Das habe ich leider nicht verstanden",
-                "html": "<p>Das habe ich leider nicht verstanden<p>",
+                "text": "Sorry, I did not understand that",
+                "html": "<p>Sorry, I did not understand that<p>",
                 "follow_up": None,
                 "context": None
             }
