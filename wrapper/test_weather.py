@@ -5,11 +5,11 @@ import unittest
 from datetime import datetime
 from unittest.mock import patch
 
-from weather_wrapper import Weather
+from weather import Weather
 
 class Testing(unittest.TestCase):
 
-    @patch('weather_wrapper.Weather._get_json_weather')
+    @patch('weather.Weather.get_json_weather')
     def test_get_current_weather(self, mock__get_response):
 
         response_path = os.path.join("weather-response", "weather.json")
@@ -23,8 +23,8 @@ class Testing(unittest.TestCase):
 
         self.assertEqual(response, expected_response)
 
-    @patch('weather_wrapper.Weather._get_current_time')
-    @patch('weather_wrapper.Weather._get_json_weather')
+    @patch('weather.Weather.get_current_time')
+    @patch('weather.Weather.get_json_weather')
     def test_get_forecast(self, mock__get_response, mock__time_response):
 
         response_path = os.path.join("weather-response", "weather.json")
@@ -39,7 +39,7 @@ class Testing(unittest.TestCase):
 
         self.assertEqual(response, expected_response)
 
-    @patch('weather_wrapper.Weather._get_json_weather')
+    @patch('weather.Weather.get_json_weather')
     def test_get_evening_forecast(self, mock__get_response):
 
         response_path = os.path.join("weather-response", "weather.json")
