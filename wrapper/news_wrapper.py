@@ -6,12 +6,12 @@ class NewsScraper:
     __instance = None
 
     @staticmethod
-    def getInstance(feed_url='https://www.tagesschau.de/xml/rss2/'):
+    def getInstance(feed_url='https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml'):
         if NewsScraper.__instance is None:
             NewsScraper(feed_url)
         return NewsScraper.__instance
 
-    def __init__(self, feed_url='https://www.tagesschau.de/xml/rss2/'):
+    def __init__(self, feed_url='https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml'):
         if NewsScraper.__instance is None:
             self.feed_url = feed_url
             NewsScraper.__instance = self
@@ -31,9 +31,11 @@ class NewsScraper:
             for a in articles[:5]:
                 title = a.find('title').text
                 description = a.find('description').text
+                link = a.find('link').text
                 article = {
                     'title': title,
-                    'description': description
+                    'description': description,
+                    'link': link
                 }
                 article_list.append(article)
             return article_list
@@ -50,3 +52,7 @@ class NewsScraper:
     def getResponse(self):
         r = requests.get(self.feed_url)
         return r.content
+
+
+inst = NewsScraper.getInstance()
+print( inst.getArticleList())
