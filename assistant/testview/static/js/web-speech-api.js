@@ -163,7 +163,8 @@ const synth = window.speechSynthesis;
 function speak(text){
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = speechSynthesis.getVoices();
-    utterance.voice = voices[0]
+    utterance.voice = voices[41]
+    utterance.lang = "en-US"
     utterance.pitch = 1;
     utterance.rate = 1;
   synth.speak(utterance);
@@ -176,7 +177,7 @@ $("#start_button").click(function () {
         return;
     }
     final_transcript = '';
-    recognition.lang = 'de-DE';
+    recognition.lang = 'en-US';
     recognition.start();
     ignore_onend = false;
     final_span.innerHTML = '';
