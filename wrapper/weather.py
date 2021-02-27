@@ -14,7 +14,7 @@ def multi_dict(K, type):
 
 class Weather:
 
-    def _get_current_time(self):
+    def get_current_time(self):
         return datetime.now()
 
     def get_forecast(self):
@@ -23,7 +23,7 @@ class Weather:
         for i, day in enumerate(self.weather_data.values()):
 
             for hour, hour_data in day.items():
-                if i > 0 or self._get_current_time().hour*100 < int(hour):
+                if i > 0 or self.get_current_time().hour*100 < int(hour):
                     text += str(int(int(hour)/100))+":00"
                     text += hour_data["weatherDesc"]
                     text += hour_data["tempC"]
@@ -52,7 +52,7 @@ class Weather:
     def get_current_weather(self):
         return "Currently it's "+self.current_weatherDesc+" at "+self.current_temp_C+" degrees."
 
-    def _get_json_weather(self, location):
+    def get_json_weather(self, location):
         try:
             url = "http://wttr.in/"+location+"?format=j1"
             response = urllib.request.urlopen(url)
@@ -64,7 +64,7 @@ class Weather:
         return values
 
     def _load_weather_data(self, location):
-        values = self._get_json_weather(location)
+        values = self.get_json_weather(location)
 
         current_weather = values['current_condition'][0]
 
