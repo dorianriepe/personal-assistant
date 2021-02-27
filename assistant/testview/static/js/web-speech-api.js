@@ -146,7 +146,6 @@ $("#ajax_button").click(function () {
         {
             type: "POST",
             url: "http://localhost:8000/coordinator/",
-            //data: {"text": "Wann ist mein nächster Termin"},
             data: data,
             success: function (result) {
                 console.log(result)
@@ -160,8 +159,11 @@ $("#ajax_button").click(function () {
 
 const synth = window.speechSynthesis;
 
-function speak(text, pitch, rate){
+
+function speak(text){
     const utterance = new SpeechSynthesisUtterance(text);
+    const voices = speechSynthesis.getVoices();
+    utterance.voice = voices[0]
     utterance.pitch = 1;
     utterance.rate = 1;
   synth.speak(utterance);
