@@ -3,5 +3,6 @@ client-secret.json
 tasks-client-secret.json
 credentials.pkl
 tasks-credentials.pkl
+check_recipe_api.py
 /.idea
 *.pyc
