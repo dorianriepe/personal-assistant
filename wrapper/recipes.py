@@ -4,27 +4,22 @@ from random import randint
 import os
 
 
-class RecipeWrapper:
+class Recipes:
+    
     __instance = None
 
     @staticmethod
     def getInstance(recipe_url="https://api.edamam.com/search"):
-        if RecipeWrapper.__instance is None:
-            RecipeWrapper(recipe_url)
-        return RecipeWrapper.__instance
+        if Recipes.__instance is None:
+            Recipes(recipe_url)
+        return Recipes.__instance
 
     def __init__(self, recipe_url="https://api.edamam.com/search"):
-        if RecipeWrapper.__instance is None:
+        if Recipes.__instance is None:
             self.recipe_url = recipe_url
-            RecipeWrapper.__instance = self
+            Recipes.__instance = self
         else:
             raise Exception("This class is a singleton!")
-
-    def setRecipeUrl(self, recipe_url):
-        self.recipe_url = recipe_url
-
-    def getRecipeUrl(self):
-        return self.recipe_url
 
     def get_response(self, querystring):
         return requests.request("GET", self.recipe_url, params=querystring).json()
