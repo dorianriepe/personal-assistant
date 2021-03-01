@@ -182,7 +182,7 @@ $("#start_button").click(function () {
     ignore_onend = false;
     final_span.innerHTML = '';
     interim_span.innerHTML = '';
-    start_img.src = 'images/mic-slash.gif';
+    start_img.src = 'static/images/mic-slash.gif';
     showInfo('allow');
     start_timestamp = event.timeStamp;
 });
