@@ -148,6 +148,11 @@ $("#ajax_button").click(function () {
     data["text"] = document.getElementById('final_span').innerText;
     data["context"] = context;
     data["follow_up"] = follow_up;
+    setTimeout(function() {
+        context = null;
+        follow_up = null
+    }, 100000);
+
     $.ajax(
         {
             type: "POST",
@@ -165,6 +170,12 @@ $("#ajax_button").click(function () {
         }
     );
 });
+
+setTimeout(function() {
+    context = null;
+    follow_up = null
+}, 1000);
+
 
 const synth = window.speechSynthesis;
 
