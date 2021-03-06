@@ -114,11 +114,12 @@ class Cooking:
                 today = datetime.date.today()
                 google_tasks.delete_list("shoppingList"+today)
 
+            null = None
             response = {
-                "text": "",
-                "html": "",
-                "follow_up": "",
-                "context": ""
+                "text": null,
+                "html": null,
+                "follow_up": null,
+                "context": null
             }
 
         return response
@@ -126,15 +127,19 @@ class Cooking:
     def spotify(self, text, context, preferences):
         if (context == "spotify"):
             # shows user a playlist
+            pass
         elif (context == "playSpotify"):
             # starts spotify playlist
+            pass
         return response
 
     def askForCooking(self, text, context, preferences):
         if context == "proactiveCooking":
             # this is for a proactive call from client
+            pass
         elif context == "cook":
             # this is for an answer
+            pass
         return response
 
     def presentRecipe(self, preferences):
