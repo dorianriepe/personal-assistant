@@ -38,7 +38,21 @@ class Tasks:
                 list_id = item["id"]
 
         if list_id == "":
-            raise NameError("Calendar name is not valid")
+            tasklist = {
+                    "kind": "tasks#taskList",
+                    "title": list_name
+                }
+            response = self.service.tasklists().insert(body=tasklist).execute()
+            
+            results = self.service.tasklists().list().execute()
+            items = results["items"]
+            
+            for item in items:
+                if item["title"] == list_name:
+                    list_id = item["id"]
+
+            if list_id == "":
+                raise NameError("Calendar name is not valid")
 
         return list_id
 
@@ -71,3 +85,11 @@ class Tasks:
         response = self.service.tasks().insert(tasklist=list_id, body=task).execute()
 
         return {"list": list_name, "task": task}
+
+    def delete_list(self, list_name):
+        
+        list_id = self.get_list_id(list_name)
+
+        response = self.service.tasklists().delete(tasklist=list_id).execute()
+
+        return {"list": list_name}
