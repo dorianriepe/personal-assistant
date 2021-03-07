@@ -47,6 +47,10 @@ var ignore_onend;
 var start_timestamp;
 var recognition;
 
+var context = null;
+
+var follow_up = null;
+
 $(document).ready(function () {
     if (!('webkitSpeechRecognition' in window)) {
         upgrade();
@@ -142,20 +146,36 @@ function capitalize(s) {
 $("#ajax_button").click(function () {
     const data = {};
     data["text"] = document.getElementById('final_span').innerText;
+    data["context"] = context;
+    data["follow_up"] = follow_up;
+    setTimeout(function() {
+        context = null;
+        follow_up = null
+    }, 100000);
+
     $.ajax(
         {
             type: "POST",
             url: "http://localhost:8000/coordinator/",
             data: data,
             success: function (result) {
-                console.log(result)
+                console.log(data)
                 $("#div1").html(result.html);
+                context = result.context;
+                follow_up = result.follow_up;
                 speak(result.text)
+                console.log(context);
             },
             dataType: "json"
         }
     );
 });
+
+setTimeout(function() {
+    context = null;
+    follow_up = null
+}, 1000);
+
 
 const synth = window.speechSynthesis;
 
