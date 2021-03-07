@@ -129,16 +129,16 @@ function upgrade() {
     showInfo('upgrade');
 }
 
-var two_line = /\n\n/g;
-var one_line = /\n/g;
 
 function linebreak(s) {
+    var one_line = /\n/g;
+    var two_line = /\n\n/g;
     return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
 }
 
-var first_char = /\S/;
 
 function capitalize(s) {
+    var first_char = /\S/;
     return s.replace(first_char, function (m) {
         return m.toUpperCase();
     });
