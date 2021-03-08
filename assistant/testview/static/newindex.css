@@ -6,19 +6,8 @@ body {
     font-size: x-large;
 }
 
-a {
-    border-radius: 40px;
-    background: lightblue;
-    padding: 15px; 
-    padding-left: 40px;
-    padding-right: 40px;
-    text-decoration: none;
-    color : #000;
-    font-size: large;
-}
-
 button {
-    background-color: #af1c30; /* Green */
+    background-color: #af1c30;
     border: none;
     color: white;
     padding: 40px;
@@ -34,21 +23,174 @@ button {
     position: absolute;
 }
 
-.news {
-    background-color: #0076BA;
-    margin-top: 5%;
-}
-
-.online-meeting {
-    background-color: #B12624;
-}
-
 .assistant { 
     color: white;
     width:50%;
     margin-left: 5%;
     margin-top: 5%;
 }
+
+.assistant .img-title-subtitle {
+    display: grid;
+    grid-template-columns: 15% 85%;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+    "image title"
+    "image subtitle";
+    width: 60%;
+    height: 10%;
+    background-color: #232323;
+    padding: 10px;
+    padding-left: 25px;
+    border-radius: 20px;
+}
+.assistant .img-title-subtitle .image { 
+    grid-area: image; 
+    align-self: center;
+    justify-self: end;
+}
+
+.assistant .img-title-subtitle .image img { 
+    max-width: 80%;
+    max-height: 80%;
+    
+}
+
+.assistant .img-title-subtitle .title { 
+    grid-area: title; 
+    font-size: x-large;
+    align-self: end;
+    justify-self: start;
+    text-decoration: none;
+    color : white;
+}
+
+.assistant .img-title-subtitle .subtitle { 
+    grid-area: subtitle; 
+    font-size: large;
+    align-self: start;
+    color : white;
+}
+
+
+
+
+
+
+
+
+.assistant .time-title-subtitle {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+    "time title"
+    "time subtitle";
+    width: 60%;
+    height: 10%;
+    background-color: #B12624;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.assistant .time-title-subtitle .time { 
+    grid-area: time; 
+    font-size: large;
+    align-self: center;
+    justify-self: center;
+    text-decoration: none;
+    color : white;
+}
+
+.assistant .time-title-subtitle .title { 
+    grid-area: title; 
+    font-size: x-large;
+    align-self: end;
+    justify-self: start;
+    text-decoration: none;
+    color : white;
+}
+
+.assistant .time-title-subtitle .subtitle { 
+    grid-area: subtitle; 
+    font-size: large;
+    align-self: start;
+    color : white;
+}
+
+
+
+
+.assistant .list-time-title {
+    background-color: #232323;
+    padding: 10px;
+    border-radius: 20px;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+      "time train plate";
+    margin-bottom: 10px;
+  }
+
+.assistant .list-time-title .time   { 
+    grid-area: time; 
+    justify-self: center; 
+}
+
+.assistant .list-time-title .train  { 
+    grid-area: train; 
+}
+
+.assistant .list-time-title .plate  { 
+    grid-area: plate; 
+}
+
+
+.assistant .rank-image-name {
+    background-color: #232323;
+    padding: 10px;
+    padding-left: 30px;
+    border-radius: 20px;
+    width: 40%;
+    display: grid;
+    grid-template-columns: 15% 25% 60%;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+      "rank image name";
+    margin-bottom: 10px;
+  }
+
+.assistant .rank-image-name .rank   { 
+    grid-area: rank; 
+    justify-self: end;
+}
+
+.assistant .rank-image-name .image  { 
+    grid-area: image; 
+    align-self: center;
+    justify-self: center;
+}
+
+.assistant .rank-image-name .image img { 
+    max-width: 40%;
+    max-height: 40%;   
+}
+
+.assistant .rank-image-name .name  { 
+    grid-area: name; 
+    justify-self: start;
+}
+
+
+
+
+
 
 .user { 
     color: #FF9301;
