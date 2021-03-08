@@ -2,6 +2,7 @@ from wrapper.google_calendar import Calendar
 from wrapper.recipes import Recipes
 from wrapper.google_tasks import Tasks
 from wrapper.html_response import HTMLResponseBuilder
+from wrapper.spotify import Spotify
 import json
 import datetime
 
@@ -21,8 +22,8 @@ class Cooking:
             response = self.askForCooking(text, preferences)
         elif (context == "spotify"):
             response = self.spotify(text, context, preferences)
-        elif (context == "playSpotify"):
-            response = self.playSpotify(text, preferences)
+        elif ("playSpotify" in context):
+            response = self.playSpotify(text, context, preferences)
         else:
             response = self.cookNow(text, preferences)
 
@@ -42,11 +43,11 @@ class Cooking:
 
         # search for a planned meal in calendar
         calendar = Calendar("DHBW6")
-        events = calendar.get_events_today().json()
+        events = calendar.get_events_today()
         meal = None
         for event in events:
-            if "Meal" in event.title:
-                meal = event.title[6:]
+            if "Meal" in event["title"]:
+                meal = event["title"][6:]
                 break
 
         # look for next free time
@@ -54,14 +55,14 @@ class Cooking:
         startTime = None
         for event in events:
             if not endTime:
-                endTime = event.end
+                endTime = event["end"]
             else:
-                startTime = event.start
+                startTime = event["start"]
 
                 diff = datetime.datetime.strptime(
                     endTime, '%H:%M') - datetime.datetime.strptime(startTime, '%H:%M')
                 if diff.total_seconds() < 3600:  # One hour
-                    endTime = event.end
+                    endTime = event["end"]
                 else:
                     break
 
@@ -71,13 +72,13 @@ class Cooking:
             # search for recipe for planned meal
             recipe_engine = Recipes.getInstance()
             search_text = meal.replace(" ", ", ")
-            diet = preferences.diet
-            health = preferences.health
+            diet = preferences["diet"]
+            health = preferences["health"]
             recipe = recipe_engine.get_recipe_by_ingredients(
                 search_text, False, diet, health)
 
             # write ingredients to shopping list
-            ingredients_list = recipe.recipe_ingredients
+            ingredients_list = recipe["recipe_igredients"]
             google_tasks = Tasks()
             today = datetime.date.today()
             for ingredient in ingredients_list:
@@ -85,16 +86,16 @@ class Cooking:
                     "shoppingList"+today, ingredient)
 
             response = {
-                "text": "Today you have planned" + recipe.recipe_name + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you have planned" + recipe.recipe_name + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                "text": "Today you have planned" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
+                        "html": "<p>Today you have planned" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
 
         else:
             # get a random recipe
-            diet = preferences.diet
-            health = preferences.health
+            diet = preferences["diet"]
+            health = preferences["health"]
             recipe = recipe_engine.get_recipe_by_ingredients(
                 "rice", True, diet, health)
 
@@ -107,8 +108,8 @@ class Cooking:
                     "shoppingList"+today, ingredient)
 
             response = {
-                "text": "Today you haven't planned anything to eat. But I found a recipe for" + recipe.recipe_name + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for" + recipe.recipe_name + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                "text": "Today you haven't planned anything to eat. But I found a recipe for" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
+                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -121,23 +122,58 @@ class Cooking:
             today = datetime.date.today()
             google_tasks.delete_list("shoppingList"+today)
 
-        null = None
         response = {
-            "text": null,
-            "html": null,
-            "follow_up": null,
-            "context": null
+            "text": None,
+            "html": None,
+            "follow_up": None,
+            "context": None
         }
 
         return response
 
     def spotify(self, text, preferences):
-        # shows user a playlist
+        if ("No" in text):
+            response = {
+                "text": None,
+                "html": None,
+                "follow_up": None,
+                "context": None
+            }
+
+        else:
+            music = Spotify()
+            playlist = music.get_playlist("cooking")[0]
+
+            response = {
+                "text": "I found this playlist. Do you want me to start the playlist?",
+                        "html": html_builder.img_title_subtitle("<p>I found this playlist. Do you want me to start the playlist?<\p>",
+                                                                playlist["name"],
+                                                                "by" +
+                                                                playlist["author"],
+                                                                playlist["image_url"],
+                                                                playlist["uri"]),
+                        "follow_up": "cooking",
+                        "context": "playSpotify" + playlist["uri"]
+            }
+
         return response
 
-    def playSpotify(self, text, preferences):
-        # starts spotify playlist
-        pass
+    def playSpotify(self, text, context, preferences):
+        if ("No" not in text):
+
+            music = Spotify()
+            deviceID = music.get_device_id("CHANGE")
+
+            uri = context[11:]
+            music.start_playback(uri)
+
+        response = {
+            "text": None,
+            "html": None,
+            "follow_up": None,
+            "context": None
+        }
+
         return response
 
     def askForCooking(self, text, context, preferences):
@@ -152,12 +188,11 @@ class Cooking:
 
     def cookNow(self, text, preferences):
         if ("No" in text):
-            null = None
             response = {
-                "text": null,
-                "html": null,
-                "follow_up": null,
-                "context": null
+                "text": None,
+                "html": None,
+                "follow_up": None,
+                "context": None
             }
 
         else:
@@ -166,8 +201,8 @@ class Cooking:
             events = calendar.get_events_today().json()
             meal = None
             for event in events:
-                if "Meal" in event.title:
-                    meal = event.title[6:]
+                if "Meal" in event["title"]:
+                    meal = event["title"][6:]
                     break
 
             html_builder = HTMLResponseBuilder()
@@ -176,56 +211,36 @@ class Cooking:
                 # search for recipe for planned meal
                 recipe_engine = Recipes.getInstance()
                 search_text = meal.replace(" ", ", ")
-                diet = preferences.diet
-                health = preferences.health
+                diet = preferences["diet"]
+                health = preferences["health"]
                 recipe = recipe_engine.get_recipe_by_ingredients(
                     search_text, False, diet, health)
 
-                # write ingredients to shopping list
-                ingredients_list = recipe.recipe_ingredients
-                google_tasks = Tasks()
-                today = datetime.date.today()
-                for ingredient in ingredients_list:
-                    google_tasks.add_task_to_list(
-                        "shoppingList"+today, ingredient)
-
-                response = {
-                    "text": "Today you have planned" + recipe.recipe_name + ". Would you like to listion to some music?",
-                            "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
-                                                                    recipe.recipe_name,
-                                                                    ("Calories:" + recipe.recipe_calories +
-                                                                     ", Time:" + recipe.recipe_time),
-                                                                    recipe.recipe_image,
-                                                                    recipe.recipe_url),
-                            "follow_up": "cooking",
-                            "context": "spotify"
-                }
-
             else:
                 # get a random recipe
-                diet = preferences.diet
-                health = preferences.health
+                diet = preferences["diet"]
+                health = preferences["health"]
                 recipe = recipe_engine.get_recipe_by_ingredients(
                     "rice", True, diet, health)
 
-                # write ingredients to shopping list
-                ingredients_list = recipe.recipe_ingredients
-                google_tasks = Tasks()
-                today = datetime.date.today()
-                for ingredient in ingredients_list:
-                    google_tasks.add_task_to_list(
-                        "shoppingList"+today, ingredient)
+            # write ingredients to shopping list
+            ingredients_list = recipe.recipe_ingredients
+            google_tasks = Tasks()
+            today = datetime.date.today()
+            for ingredient in ingredients_list:
+                google_tasks.add_task_to_list(
+                    "shoppingList"+today, ingredient)
 
-                response = {
-                    "text": "Today you haven't planned anything to eat. But I found a recipe for" + recipe.recipe_name + ". Would you like to listion to some music?",
-                            "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
-                                                                    recipe.recipe_name,
-                                                                    ("Calories:" + recipe.recipe_calories +
-                                                                     ", Time:" + recipe.recipe_time),
-                                                                    recipe.recipe_image,
-                                                                    recipe.recipe_url),
-                            "follow_up": "cooking",
-                            "context": "spotify"
-                }
+            response = {
+                "text": "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?",
+                        "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
+                                                                recipe["recipe_name"],
+                                                                ("Calories:" + recipe["recipe_calories"] +
+                                                                    ", Time:" + recipe["recipe_time"]),
+                                                                recipe["recipe_image"],
+                                                                recipe["recipe_url"]),
+                        "follow_up": "cooking",
+                        "context": "spotify"
+            }
 
         return response
