@@ -14,6 +14,8 @@
 
 ### News
 
+<img width="1904" alt="news" src="https://user-images.githubusercontent.com/44470917/110333042-69121180-8021-11eb-8cb1-aae81bf32c61.png">
+
 ```html
 <p>Good Morning!<br> today it's going to be sunny 22 degrees. NASA's "Perseverance" rover has successfully touched down on Mars. For more information check this website:</p>
 <div class="img-title-subtitle">
@@ -31,6 +33,8 @@
 
 ### Lecture
 
+<img width="1904" alt="lecture" src="https://user-images.githubusercontent.com/44470917/110333085-77f8c400-8021-11eb-8bf3-3aec78141395.png">
+
 ```html
 <p>Your next lecture "Semantic Web" starts in 10 minutes. Remember your "exam questions" assignment. Here is the Zoom link:</p>
 <div class="time-title-subtitle">
@@ -47,6 +51,8 @@
 ```
 
 ### Train departures
+
+<img width="1904" alt="train" src="https://user-images.githubusercontent.com/44470917/110333132-8515b300-8021-11eb-9e43-a1ae34803154.png">
 
 ```html
 <p>Hier sind deine nächsten Bahn-Abfahren:</p>
@@ -87,6 +93,8 @@
 
 ### Spotify playlist
 
+<img width="1904" alt="spotify" src="https://user-images.githubusercontent.com/44470917/110333147-8a72fd80-8021-11eb-8a69-72321fc0c0dc.png">
+
 ```html
 <p>Alright, do you want me to start the playlist?</p>
 <div class="img-title-subtitle">
@@ -103,6 +111,8 @@
 ```
 
 ### Bundesliga table
+
+<img width="1904" alt="bundesliga" src="https://user-images.githubusercontent.com/44470917/110333176-91017500-8021-11eb-9dfb-bb1a076e8977.png">
 
 ```html
 <p>Borussia Dortmund lost 4:2 against FC Bayern Munich. Bayern remains at the top of the table:</p>
