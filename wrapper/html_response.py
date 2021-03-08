@@ -18,5 +18,5 @@ class HTMLResponseBuilder:
     def bahn(self, text, departures):
         html = "<p>"+text+"</p>"
         for departure in departures:
-            html += "<div class=\"list-time-title\"><div class=\"time\">"+departure["time"]+"</div><div class=\"train\">"+departure["train"]+"</div><div class=\"plate\">"+departure["plate"]+"</div></div>"
+            html += "<div class=\"list-time-title\"><div class=\"time\">"+departure["time"]+"</div><div class=\"train\">"+departure["train"]+"</div><div class=\"plate\"></div></div>"
         return html
