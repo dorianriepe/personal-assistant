@@ -143,12 +143,13 @@ function capitalize(s) {
         return m.toUpperCase();
     });
 }
+
 $("#ajax_button").click(function () {
     const data = {};
     data["text"] = document.getElementById('final_span').innerText;
     data["context"] = context;
     data["follow_up"] = follow_up;
-    setTimeout(function() {
+    setTimeout(function () {
         context = null;
         follow_up = null
     }, 100000);
@@ -171,7 +172,7 @@ $("#ajax_button").click(function () {
     );
 });
 
-setTimeout(function() {
+setTimeout(function () {
     context = null;
     follow_up = null
 }, 1000);
@@ -180,14 +181,14 @@ setTimeout(function() {
 const synth = window.speechSynthesis;
 
 
-function speak(text){
+function speak(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = speechSynthesis.getVoices();
     utterance.voice = voices[41]
     utterance.lang = "en-US"
     utterance.pitch = 1;
     utterance.rate = 1;
-  synth.speak(utterance);
+    synth.speak(utterance);
 }
 
 
@@ -222,9 +223,52 @@ function showInfo(s) {
 }
 
 function openNav() {
-  document.getElementById("myNav").style.display = "block";
+    document.getElementById("myNav").style.display = "block";
 }
 
 function closeNav() {
-  document.getElementById("myNav").style.display = "none";
+    checkCookie();
+    document.getElementById("myNav").style.display = "none";
+}
+
+var today = new Date();
+var expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
+
+function setCookie(name, value) {
+    document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+}
+
+function putCookie(form)
+//this should set the UserName cookie to the proper value;
+{
+    setCookie("userName", form[0].usrname.value);
+    closeNav();
+    return true;
+}
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+function checkCookie() {
+    var user = getCookie("userName");
+    if (user != "") {
+        //alert("Welcome again " + user);
+    } else {
+        openNav()
+    }
 }
