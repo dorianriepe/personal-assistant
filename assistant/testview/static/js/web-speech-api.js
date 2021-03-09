@@ -241,7 +241,12 @@ function setCookie(name, value) {
 function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
-    setCookie("userName", form[0].usrname.value);
+    var obj = {};
+    obj.name = form[0].usrname.value;
+    obj.location = form[0].lcation.value
+    obj.club = form[0].clb.value;
+    // console.log();
+    setCookie("userName", JSON.stringify(obj));
     closeNav();
     return true;
 }
@@ -267,8 +272,53 @@ function getCookie(cname) {
 function checkCookie() {
     var user = getCookie("userName");
     if (user != "") {
-        //alert("Welcome again " + user);
+        data = JSON.parse(user);
+        document.getElementById("div1").innerHTML = "How can I help you? " + data.name;
     } else {
         openNav()
     }
 }
+
+function clubs(form) {
+    var clubs1 = [];
+    clubs1[0] = 'Bayern Muenchen';
+    clubs1[1] = 'BVB Dortmund';
+
+    var clubs2 = [];
+    clubs2[0] = 'HSV';
+    clubs2[1] = 'KSC';
+
+    var options = '';
+
+    form[0].addEventListener('click', () => {
+            if(form[0].value) {
+            form[0].value = "";
+        }
+        });
+
+    console.log(form[0].value);
+    if (form[0].value == "1.Bundesliga") {
+        console.log("war hier")
+        for (var i = 0; i < clubs1.length; i++) {
+            options += '<option value="' + clubs1[i] + '" />';
+        }
+    } else {
+        for (var i = 0; i < clubs2.length; i++) {
+            options += '<option value="' + clubs2[i] + '" />';
+        }
+    }
+    document.getElementById('club').innerHTML = options;
+
+}
+
+function resetList(form)
+{
+     form[0].addEventListener('click', () => {
+            if(form[0].value) {
+            form[0].value = "";
+        }
+        });
+}
+
+
+
