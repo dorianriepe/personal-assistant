@@ -1,12 +1,33 @@
-var reminders = [
-    {"hour": 15, "minute": 10, "usecase": "hungry"},
-    {"hour": 15, "minute": 15, "usecase": "next meeting"},
-];
+var reminders = [];
+
+function updateReminders() {
+    console.log("update reminders")
+
+    const data = {};
+    data["morning_reminder"] = "08:00";
+    data["shopping_reminder"] = "12:00";
+    data["cooking_reminder"] = "18:00";
+    data["evening_reminder"] = "22:00";
+    $.ajax(
+        {
+            type: "POST",
+            url: "http://localhost:8000/coordinator/reminder/",
+            data: data,
+            success: function (result) {
+                //console.log(data)
+                console.log(result)
+                reminders = result.reminders
+            },
+            dataType: "json"
+        }
+    );
+}
 
 $(document).ready(function () {
         
-    var intervalId = setInterval(function() {
-        
+    var proactiveIntervalId = setInterval(function() {
+        console.log("check reminders")
+        console.log(reminders)
         if(reminders.length > 0) {
             let now = new Date()
             let reminder = new Date()
@@ -14,7 +35,6 @@ $(document).ready(function () {
             reminder.setMinutes(reminders[0].minute)
             
             if(reminder <= now){
-                //console.log(reminders[0].usecase)
                 const data = {};
                 data["text"] = reminders[0].usecase;
                 data["context"] = null;
@@ -25,8 +45,8 @@ $(document).ready(function () {
                         url: "http://localhost:8000/coordinator/",
                         data: data,
                         success: function (result) {
-                            console.log(data)
-                            console.log(result)
+                            //console.log(data)
+                            //console.log(result)
                             context = result.context;
                             follow_up = result.follow_up;
                             $("#dialog").append("<div class=\"assistant\"></div>");
@@ -40,10 +60,18 @@ $(document).ready(function () {
 
                 reminders.shift();
             }
-        }else {
-            clearInterval(intervalId);
-            console.log("currently no more reminders")
+        } else {
+            //clearInterval(proactiveIntervalId);
+            //console.log("currently no more reminders")
         }
         
-    }, 5000);
+    }, 10000);
+
+    updateReminders();
+
+    var updateIntervalId = setInterval(function() {
+        
+        updateReminders();
+        
+    }, 60000);
 });
