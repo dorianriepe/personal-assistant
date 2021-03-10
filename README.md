@@ -1,5 +1,9 @@
 # personal-assistant
 
+## Chrome Settings
+
+1. Go to `chrome://settings/content/sound` and add `localhost:8000` to the Allowed websites
+
 ## Run Server
 
 1. `pip install Django`
