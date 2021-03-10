@@ -242,10 +242,22 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
-    obj.name = form[0].usrname.value;
-    obj.location = form[0].lcation.value
-    obj.club = form[0].clb.value;
+    obj["name"] = form[0].usrname.value;
+    obj["location"] = form[0].lcation.value
+    obj["liga"] = form[0].bndesliga.value;
+    obj["club"] = form[0].clb.value;
     // console.log();
+    $.ajax(
+        {
+            type: "POST",
+            url: "http://localhost:8000/preferences/",
+            data: obj,
+            success: function (result) {
+                console.log(obj)
+            },
+            dataType: "json"
+        }
+    );
     setCookie("userName", JSON.stringify(obj));
     closeNav();
     return true;
@@ -274,6 +286,10 @@ function checkCookie() {
     if (user != "") {
         data = JSON.parse(user);
         document.getElementById("div1").innerHTML = "How can I help you? " + data.name;
+        document.getElementsByTagName('form')[0].usrname.value = data.name;
+        document.getElementsByTagName('form')[0].bndesliga.value = data.liga;
+        document.getElementsByTagName('form')[0].clb.value = data.club;
+        clubs(document.getElementsByName('bndesliga'));
     } else {
         openNav()
     }
@@ -291,10 +307,13 @@ function clubs(form) {
     var options = '';
 
     form[0].addEventListener('click', () => {
-            if(form[0].value) {
+        if (form[0].value) {
             form[0].value = "";
+            document.getElementsByTagName('form')[0].clb.value = "";
+            resetList(document.getElementsByName('clb'));
+
         }
-        });
+    });
 
     console.log(form[0].value);
     if (form[0].value == "1.Bundesliga") {
@@ -311,13 +330,12 @@ function clubs(form) {
 
 }
 
-function resetList(form)
-{
-     form[0].addEventListener('click', () => {
-            if(form[0].value) {
+function resetList(form) {
+    form[0].addEventListener('click', () => {
+        if (form[0].value) {
             form[0].value = "";
         }
-        });
+    });
 }
 
 

@@ -35,7 +35,16 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <div class="overlay-content">
             <form>
-                <input type="text" value="Enter Your Nickname" id="nameBox" name='usrname'>
+                <input type="text" value="Nickname" id="nameBox" name='usrname'>
+                <input type="text" value="Berlin" id="locBox" name='lcation'>
+                <input list="bundesliga" name="bndesliga" onchange="clubs(document.getElementsByName('bndesliga'))">
+                <datalist id="bundesliga">
+                    <option value="1.Bundesliga">
+                    <option value="2.Bundesliga">
+                </datalist>
+                <input list="club" name="clb" onchange="resetList(document.getElementsByName('clb'))">
+                <datalist id="club">
+                </datalist>
                 <input type="button" value="Go!" id="submit"
                        onclick="putCookie(document.getElementsByTagName('form'));">
             </form>
