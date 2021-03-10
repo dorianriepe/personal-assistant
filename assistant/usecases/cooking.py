@@ -86,8 +86,8 @@ class Cooking:
                     "shoppingList"+today, ingredient)
 
             response = {
-                "text": "Today you have planned" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you have planned" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                "text": "Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
+                        "html": "<p>Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -108,8 +108,8 @@ class Cooking:
                     "shoppingList"+today, ingredient)
 
             response = {
-                "text": "Today you haven't planned anything to eat. But I found a recipe for" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for" + recipe["recipe_name"] + ". You don't have any appointments between" + endTime + "and" + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                "text": "Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
+                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -132,7 +132,7 @@ class Cooking:
         return response
 
     def spotify(self, text, preferences):
-        if ("No" in text):
+        if ("no" in text):
             response = {
                 "text": None,
                 "html": None,
@@ -141,6 +141,8 @@ class Cooking:
             }
 
         else:
+            html_builder = HTMLResponseBuilder()
+
             music = Spotify()
             playlist = music.get_playlist("cooking")[0]
 
@@ -148,7 +150,7 @@ class Cooking:
                 "text": "I found this playlist. Do you want me to start the playlist?",
                         "html": html_builder.img_title_subtitle("<p>I found this playlist. Do you want me to start the playlist?<\p>",
                                                                 playlist["name"],
-                                                                "by" +
+                                                                "by " +
                                                                 playlist["author"],
                                                                 playlist["image_url"],
                                                                 playlist["uri"]),
@@ -159,7 +161,7 @@ class Cooking:
         return response
 
     def playSpotify(self, text, context, preferences):
-        if ("No" not in text):
+        if ("yes" in text):
 
             music = Spotify()
             deviceID = music.get_device_id("CHANGE")
@@ -187,7 +189,7 @@ class Cooking:
         return response
 
     def cookNow(self, text, preferences):
-        if ("No" in text):
+        if ("no" in text):
             response = {
                 "text": None,
                 "html": None,
@@ -235,8 +237,8 @@ class Cooking:
                 "text": "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?",
                         "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
                                                                 recipe["recipe_name"],
-                                                                ("Calories:" + recipe["recipe_calories"] +
-                                                                    ", Time:" + recipe["recipe_time"]),
+                                                                ("Calories: " + recipe["recipe_calories"] +
+                                                                    ", Time: " + recipe["recipe_time"]),
                                                                 recipe["recipe_image"],
                                                                 recipe["recipe_url"]),
                         "follow_up": "cooking",
