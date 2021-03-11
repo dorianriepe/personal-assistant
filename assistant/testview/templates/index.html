@@ -6,13 +6,14 @@
     <title>Web Speech APIU</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'web-speech.css' %}" />
+    <link rel="stylesheet" href="{% static 'web-speech.css' %}"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
-<body>
+<body onload="checkCookie()">
 <main>
     <div class="container mt-3">
         <h3 class="text-center">Web Speech API Demo</h3>
+        <span style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776; preferences</span>
         <div id="info"></div>
         <div id="div1">How can I help you?</div>
         <div class="float-right">
@@ -24,12 +25,38 @@
             <span id="interim_span" class="interim"></span>
             <p>
         </div>
-            <div class="col-12 col-md-4 col-lg-6 mt-3 mt-md-0 p-0 m-0">
-                <div class="float-right">
-                    <button id="ajax_button" class="btn btn-primary ">POST</button>
-                </div>
+        <div class="col-12 col-md-4 col-lg-6 mt-3 mt-md-0 p-0 m-0">
+            <div class="float-right">
+                <button id="ajax_button" class="btn btn-primary ">POST</button>
             </div>
         </div>
+    </div>
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content">
+            <form>
+                <input type="text" value="Nickname" id="nameBox" name='usrname'>
+                <input type="text" value="Berlin" id="locBox" name='lcation'>
+                <input list="bundesliga" name="bndesliga" onchange="clubs(document.getElementsByName('bndesliga'))">
+                <datalist id="bundesliga">
+                    <option value="1.Bundesliga">
+                    <option value="2.Bundesliga">
+                </datalist>
+                <input list="club" name="clb" onchange="resetList(document.getElementsByName('clb'))">
+                <datalist id="club">
+                </datalist>
+                <input list="news" name="nws" onchange="resetList(document.getElementsByName('nws'))">
+                <datalist id="news">
+                    <option value="New York Times"></option>
+                    <option value="The Economist"></option>
+                    <option value="Deutsche Welle"></option>
+                </datalist>
+                <input type="button" value="Go!" id="submit"
+                       onclick="putCookie(document.getElementsByTagName('form'));">
+            </form>
+            <div id="value"></div>
+        </div>
+    </div>
 
 </main>
 <script src="{% static 'js/web-speech-api.js' %}"></script>
