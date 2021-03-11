@@ -20,6 +20,5 @@ from django.urls.conf import include
 urlpatterns = [
     path('', include('testview.urls')),
     path('coordinator/', include('coordinator.urls')),
-    path('preferences/', include('preferences.urls')),
     path('admin/', admin.site.urls),
 ]

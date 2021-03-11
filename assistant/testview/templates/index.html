@@ -45,6 +45,12 @@
                 <input list="club" name="clb" onchange="resetList(document.getElementsByName('clb'))">
                 <datalist id="club">
                 </datalist>
+                <input list="news" name="nws" onchange="resetList(document.getElementsByName('nws'))">
+                <datalist id="news">
+                    <option value="New York Times"></option>
+                    <option value="The Economist"></option>
+                    <option value="Deutsche Welle"></option>
+                </datalist>
                 <input type="button" value="Go!" id="submit"
                        onclick="putCookie(document.getElementsByTagName('form'));">
             </form>

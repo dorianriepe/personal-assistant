@@ -149,6 +149,7 @@ $("#ajax_button").click(function () {
     data["text"] = document.getElementById('final_span').innerText;
     data["context"] = context;
     data["follow_up"] = follow_up;
+    data["preferences"] = JSON.parse(getCookie("userName"));
     setTimeout(function () {
         context = null;
         follow_up = null
@@ -242,22 +243,27 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "") {
+        alert("please fill all fields");
+        return false;
+    }
+    switch (form[0].nws.value) {
+        case "New York Times":
+            obj["news"] = "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml";
+            break;
+        case "The Economist":
+            obj["news"] = "https://www.economist.com/the-world-this-week/rss.xml";
+            break;
+        case "Deutsche Welle":
+            obj["news"] = "https://rss.dw.com/rdf/rss-en-ger";
+
+    }
+
     obj["name"] = form[0].usrname.value;
     obj["location"] = form[0].lcation.value
     obj["liga"] = form[0].bndesliga.value;
     obj["club"] = form[0].clb.value;
     // console.log();
-    $.ajax(
-        {
-            type: "POST",
-            url: "http://localhost:8000/preferences/",
-            data: obj,
-            success: function (result) {
-                console.log(obj)
-            },
-            dataType: "json"
-        }
-    );
     setCookie("userName", JSON.stringify(obj));
     closeNav();
     return true;
@@ -289,7 +295,18 @@ function checkCookie() {
         document.getElementsByTagName('form')[0].usrname.value = data.name;
         document.getElementsByTagName('form')[0].bndesliga.value = data.liga;
         document.getElementsByTagName('form')[0].clb.value = data.club;
+        switch (data.news) {
+            case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
+                document.getElementsByTagName('form')[0].nws.value = "News York Times";
+                break;
+            case "https://www.economist.com/the-world-this-week/rss.xml":
+                document.getElementsByTagName('form')[0].nws.value = "The Economist";
+                break;
+            case "https://rss.dw.com/rdf/rss-en-ger":
+                document.getElementsByTagName('form')[0].nws.value = "Deutsche Welle";
+        }
         clubs(document.getElementsByName('bndesliga'));
+        resetList(document.getElementsByName('nws'));
     } else {
         openNav()
     }
@@ -315,9 +332,7 @@ function clubs(form) {
         }
     });
 
-    console.log(form[0].value);
     if (form[0].value == "1.Bundesliga") {
-        console.log("war hier")
         for (var i = 0; i < clubs1.length; i++) {
             options += '<option value="' + clubs1[i] + '" />';
         }
