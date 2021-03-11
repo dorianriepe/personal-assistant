@@ -140,5 +140,15 @@ class Meeting:
 
             return response
         
+        tasks = Tasks()
         task_response = tasks.get_tasks_from_list(title)
+
+        response = {
+                "text": "Here are you're tasks." + task_response,
+                "html": "<p>Tasks:\n"+ task_response "<p>",
+                "follow_up": None,
+                "context": None
+            }
+
+            return response
 
