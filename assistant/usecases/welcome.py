@@ -6,8 +6,8 @@ class Welcome:
   def handle(self, text, context, preferences):
     if context == "workout":
       return self.workout(text, preferences)
-    elif context == "spotify":
-      return self.spotify(text, preferences)
+    elif "spotify" in context:
+      return self.spotify(text, preferences, context) #context is playlist_uri
     else:
       return self.welcome(text, preferences)
 
@@ -25,7 +25,7 @@ class Welcome:
 
    articleList = NewsScrapper.getArticleList
    news = articleList[0].description
-   news_preview = "<a href = "+ articleList[0].link +">" + articleList[0].title + "</a>"
+   news_preview = HTMLResponseBuilder.img_title_subtitle(articleList[0].text, articleList[0].title, articleList[0].subtitle, articleList[0].image_url, articleList[0].link)
 
    events = Calendar.get_events_for_today
    if events.size:
@@ -35,7 +35,7 @@ class Welcome:
 
 
    text = greetings + " " + weather + " " + news + " " + calendar
-   html = "<p>" + greetings + " " + weather + "</p><p>" + news + "</p>" + news_preview + "<p>" + calendar + "</p>"
+   html = "<p>" + greetings + " " + weather + " " + news + "</p>" + news_preview + "<p>" + calendar + "</p>"
    if self.time_for_workout?(events):
      text += " Do you want to start a workout an listen to some music?"
      html += "<p>Do you want to start a workout an listen to some music?</p>"
@@ -50,12 +50,14 @@ class Welcome:
  def workout(self, text, preferences):
    if text.lower.find(positive_text) >= 0:
      answer = "<p>Ok. Should I start the playlist on Spotify?</p>"
-     spotify_preview = ""
-     return { "text": answer, "html": answer + spotify_preview, "follow_up": "welcome", "context": "spotify" }
+     spt = Spotify.get_playlist("workout")
+     spotify_preview = HTMLResponesBuilder.img_title_subtitle(spt.text, spt.title, spt.subtitle, spt.image_url, spt.link)
+     return { "text": answer, "html": answer + spotify_preview, "follow_up": "welcome", "context": spt.link }
    else:
      return { "text": None, "html": None, "follow_up": None, "context": None }
 
-  def spotify(self, text, preferences):
+  def spotify(self, text, preferences, playback_uri):
+    positive_text = ['yes', 'ok']
     if text.lower.find(positive_text) >= 0:
-      #play spotify
+      Spotfiy.start_playback(playback_uri)
     return { "text": None, "html": None, "follow_up": None, "context": None }
