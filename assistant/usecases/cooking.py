@@ -10,7 +10,7 @@ import datetime
 class Cooking:
 
     def __init__(self):
-        self.context = None
+        return
 
     def handle(self, text, context, preferences):
 
@@ -27,19 +27,10 @@ class Cooking:
         else:
             response = self.cookNow(text, preferences)
 
-        # response = {
-        #         "text": "Today you have planned spaghetti with tomato sauce. You don't have any appointments between 12am and 2pm. Shall I put the ingredients on the shopping list?",
-        #         "html": "<p>Today you have planned spaghetti with tomato sauce. You don't have any appointments between 12:00 and 14:00. Shall I put the ingredients on the shopping list?<p>",
-        #         "follow_up": "cooking",
-        #         "context": "test"
-        #     }
-
         return response
 
     def shoppingList(self, text, preferences):
         # this is for a proactive call from client
-        # look calendar up
-        # response = [{'title': 'Datenbanken', 'location': 'https://dhbw-stuttgart.zoom.us/j/99643057619', 'start': '10:00', 'end': '12:30'}, {'title': 'Security', 'location': '', 'start': '13:15', 'end': '15:45'}, {'title': 'Zero Knowledge', 'location': '', 'start': '13:00', 'end': '15:30'}]
 
         # search for a planned meal in calendar
         calendar = Calendar("DHBW6")
@@ -87,7 +78,7 @@ class Cooking:
 
             response = {
                 "text": "Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                        "html": "<p>Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?</p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -109,7 +100,7 @@ class Cooking:
 
             response = {
                 "text": "Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?</p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -117,7 +108,7 @@ class Cooking:
         return response
 
     def shoppingListResponseHandling(self, text):
-        if ("no" in text):
+        if (negative_text in text):
             google_tasks = Tasks()
             today = datetime.date.today()
             google_tasks.delete_list("shoppingList"+today)
@@ -132,7 +123,7 @@ class Cooking:
         return response
 
     def spotify(self, text, preferences):
-        if ("no" in text):
+        if (negative_text in text):
             response = {
                 "text": None,
                 "html": None,
@@ -148,7 +139,7 @@ class Cooking:
 
             response = {
                 "text": "I found this playlist. Do you want me to start the playlist?",
-                        "html": html_builder.img_title_subtitle("<p>I found this playlist. Do you want me to start the playlist?<\p>",
+                        "html": html_builder.img_title_subtitle("<p>I found this playlist. Do you want me to start the playlist?</p>",
                                                                 playlist["name"],
                                                                 "by " +
                                                                 playlist["author"],
@@ -161,7 +152,7 @@ class Cooking:
         return response
 
     def playSpotify(self, text, context, preferences):
-        if ("yes" in text):
+        if (positive_text in text):
 
             music = Spotify()
             deviceID = music.get_device_id("CHANGE")
@@ -182,14 +173,14 @@ class Cooking:
         # this is for a proactive call from client
         response = {
             "text": "Hey, have you already cooked? If not, would you like to cook now?",
-            "html": "<p>Hey, have you already cooked? If not, would you like to cook now?<\p>",
+            "html": "<p>Hey, have you already cooked? If not, would you like to cook now?</p>",
             "follow_up": "cooking",
             "context": "cook"
         }
         return response
 
     def cookNow(self, text, preferences):
-        if ("no" in text):
+        if (negative_text in text):
             response = {
                 "text": None,
                 "html": None,
@@ -235,7 +226,7 @@ class Cooking:
 
             response = {
                 "text": "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?",
-                        "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
+                        "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?</p>",
                                                                 recipe["recipe_name"],
                                                                 ("Calories: " + recipe["recipe_calories"] +
                                                                     ", Time: " + recipe["recipe_time"]),
