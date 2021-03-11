@@ -56,6 +56,7 @@ class Welcome:
     else:
       return { "text": None, "html": None, "follow_up": None, "context": None }
 
+
   def spotify(self, text, preferences, playback_uri):
     positive_text = ['yes', 'ok']
     if text.lower.find(positive_text) >= 0:
