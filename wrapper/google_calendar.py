@@ -87,4 +87,4 @@ class Calendar:
         if len(events) > 0:
             return events[0]
         else:
-            return {}
+            return None

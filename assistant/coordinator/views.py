@@ -10,12 +10,13 @@ from usecases.evening import Evening
 from wrapper.google_calendar import Calendar
 from datetime import datetime, timedelta
 
+
 @csrf_exempt
 def index(request):
     if request.method == "POST":
         text = request.POST['text']
         text = text.lower()
-        
+
         keywords_welcome = ["welcome", "morning", "hello", "hi"]
         keywords_meeting = ["meeting", "appointment"]
         keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
@@ -23,32 +24,32 @@ def index(request):
 
         if any(keyword in text for keyword in keywords_welcome):
 
-            welcome = Welcome()            
+            welcome = Welcome()
             response = welcome.handle(text, None, None)
 
             return JsonResponse(response)
 
         elif any(keyword in text for keyword in keywords_meeting):
-            
-            meeting = Meeting()            
+
+            meeting = Meeting()
             response = meeting.handle(text, None, None)
 
             return JsonResponse(response)
 
         elif any(keyword in text for keyword in keywords_cooking):
-            
-            cooking = Cooking()            
-            response = cooking.handle(text, None, None)
+
+            cooking = Cooking()
+            response = cooking.handle(text, context, preferences)
 
             return JsonResponse(response)
 
         elif any(keyword in text for keyword in keywords_evening):
-            
-            evening = Evening()            
+
+            evening = Evening()
             response = evening.handle(text, None, None)
 
             return JsonResponse(response)
-        
+
         else:
             response = {
                 "text": "Sorry, I did not understand that",
