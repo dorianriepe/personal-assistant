@@ -108,7 +108,7 @@ class Cooking:
         return response
 
     def shoppingListResponseHandling(self, text):
-        if (negative_text in text):
+        if any(t in text for t in negative_text):
             google_tasks = Tasks()
             today = datetime.date.today()
             google_tasks.delete_list("shoppingList"+today)
@@ -123,7 +123,7 @@ class Cooking:
         return response
 
     def spotify(self, text, preferences):
-        if (negative_text in text):
+        if any(t in text for t in negative_text):
             response = {
                 "text": None,
                 "html": None,
@@ -152,7 +152,7 @@ class Cooking:
         return response
 
     def playSpotify(self, text, context, preferences):
-        if (positive_text in text):
+        if any(t in text for t in positive_text):
 
             music = Spotify()
             deviceID = music.get_device_id("CHANGE")
@@ -169,7 +169,7 @@ class Cooking:
 
         return response
 
-    def askForCooking(self, text, context, preferences):
+    def askForCooking(self, preferences):
         # this is for a proactive call from client
         response = {
             "text": "Hey, have you already cooked? If not, would you like to cook now?",
@@ -180,7 +180,7 @@ class Cooking:
         return response
 
     def cookNow(self, text, preferences):
-        if (negative_text in text):
+        if any(t in text for t in negative_text):
             response = {
                 "text": None,
                 "html": None,
