@@ -21,8 +21,8 @@ class Welcome:
       return self.welcome(text, preferences)
 
   def time_for_workout(self, event):
-    if event.size:
-      diff = datetime.strptime(event[0].start, '%H:%M') - datetime.now()
+    if len(event):
+      diff = datetime.strptime(event[0]["start"], '%H:%M') - datetime.now()
       if diff.total_seconds() < 3600: # One hour
         return False
     return True
@@ -38,13 +38,15 @@ class Welcome:
     articleList = newsScraper.getArticleList()
     news = articleList[0]["description"]
     newspaper_logo = "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1491958734/bqp32una36b06hmbulla.png"
-    news_preview = HTMLResponseBuilder.img_title_subtitle(articleList[0]["description"], articleList[0]["title"], "by New York Times", newspaper_logo, articleList[0]["link"])
+    html_response_builder = HTMLResponseBuilder()
+    news_preview = html_response_builder.img_title_subtitle(articleList[0]["description"], articleList[0]["title"], "by New York Times", newspaper_logo, articleList[0]["link"])
 
-    events = Calendar.get_events_for_today()
-    if len(events):
+    calendar = Calendar("DHBW6")
+    events = calendar.get_events_today()
+    if len(events) == 0:
       calendar = "Today you have no entries in your calendar."
     else:
-      calendar = "Today you have " + str(len(events)) + " lectures. The first starts at "+events[0].start + "."
+      calendar = "Today you have " + str(len(events)) + " lectures. The first starts at "+events[0]["start"] + "."
 
 
     text = greetings + " " + weather + " " + news + " " + calendar

@@ -30,7 +30,7 @@ class Meeting:
         return response
 
     def meeting(self, text, preferences):
-        calender = Calender("DHBW6")
+        calendar = Calendar("DHBW6")
         events = calendar.get_events_today().json()
 
         if len(events) > 0:

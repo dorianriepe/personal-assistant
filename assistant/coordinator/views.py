@@ -10,6 +10,7 @@ from usecases.evening import Evening
 from wrapper.google_calendar import Calendar
 from datetime import datetime, timedelta
 
+import pytz
 
 @csrf_exempt
 def index(request):
@@ -67,7 +68,9 @@ def reminder(request):
     if request.method == "POST":
         
         reminders = []
-        now = datetime.now() + timedelta(hours = 1)
+
+        timzone_berlin = pytz.timezone('Europe/Berlin')
+        now = datetime.now(timzone_berlin)
 
         morning_default = datetime.strptime(request.POST['morning_reminder'],'%H:%M')
         shopping_default = datetime.strptime(request.POST['shopping_reminder'],'%H:%M')
@@ -80,15 +83,12 @@ def reminder(request):
         evening = now.replace(hour=evening_default.hour, minute=evening_default.minute)
 
         calendar = Calendar("DHBW6")
-        todays_events = calendar.get_events_today()
-        # [{'title': 'Interaktive Systeme', 'location': '', 'start': '14:00', 'end': '17:00'}]        
+        todays_events = calendar.get_events_today()      
 
         for event in todays_events:
-            _event_start = datetime.strptime(event['start'],'%H:%M') + timedelta(minutes = -10)
-
-            event_start = now.replace(hour=_event_start.hour, minute=_event_start.minute)
-            if now < event_start:
-                reminders.append({"ts": event_start.strftime("%H:%M"), "hour": event_start.hour, "minute": event_start.minute, "usecase": "meeting"})
+            event_start = datetime.strptime(event['start'],'%H:%M') + timedelta(minutes = -10)
+            event_start = now.replace(hour=event_start.hour, minute=event_start.minute)
+            reminders.append({"ts": event_start.strftime("%H:%M"), "hour": event_start.hour, "minute": event_start.minute, "usecase": "meeting"})
         
         if now < morning:
             reminders.append({"ts": morning.strftime("%H:%M"), "hour": morning.hour, "minute": morning.minute, "usecase": "welcome"})
