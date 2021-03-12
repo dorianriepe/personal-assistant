@@ -39,6 +39,7 @@ $(document).ready(function () {
                 data["text"] = reminders[0].usecase;
                 data["context"] = null;
                 data["follow_up"] = null;
+                data["preferences"] = JSON.parse(getCookie("userName"));
                 $.ajax(
                     {
                         type: "POST",

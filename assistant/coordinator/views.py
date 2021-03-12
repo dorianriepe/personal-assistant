@@ -15,50 +15,77 @@ import pytz
 @csrf_exempt
 def index(request):
     if request.method == "POST":
-        text = request.POST['text']
-        text = text.lower()
 
-        keywords_welcome = ["welcome", "morning", "hello", "hi"]
-        keywords_meeting = ["meeting", "appointment"]
-        keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
-        keywords_evening = ["night", "sleep"]
+        #print(request.POST)
 
-        if any(keyword in text for keyword in keywords_welcome):
+        text = request.POST['text'].lower()
+        follow_up = request.POST['follow_up']
+        context = request.POST['context']
+        preferences = request.POST['preferences']
+        print("preferences views.index:")
+        print(type(preferences))
+        print(preferences)
+        welcome = Welcome()
+        meeting = Meeting()
+        cooking = Cooking()
+        evening = Evening()
 
-            welcome = Welcome()
-            response = welcome.handle(text, None, None)
 
+        if follow_up == "welcome":
+            response = welcome.handle(text, context, preferences)
+            return JsonResponse(response)
+        
+        elif follow_up == "meeting":
+            response = meeting.handle(text, context, preferences)
             return JsonResponse(response)
 
-        elif any(keyword in text for keyword in keywords_meeting):
-
-            meeting = Meeting()
-            response = meeting.handle(text, None, None)
-
-            return JsonResponse(response)
-
-        elif any(keyword in text for keyword in keywords_cooking):
-
-            cooking = Cooking()
+        elif follow_up == "cooking":
             response = cooking.handle(text, context, preferences)
-
             return JsonResponse(response)
 
-        elif any(keyword in text for keyword in keywords_evening):
-
-            evening = Evening()
-            response = evening.handle(text, None, None)
-
+        elif follow_up == "evening":
+            response = evening.handle(text, context, preferences)
             return JsonResponse(response)
 
         else:
-            response = {
-                "text": "Sorry, I did not understand that",
-                "html": "<p>Sorry, I did not understand that<p>",
-                "follow_up": None,
-                "context": None
-            }
-            return JsonResponse(response)
+
+            keywords_welcome = ["welcome", "morning", "hello", "hi"]
+            keywords_meeting = ["meeting", "appointment"]
+            keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
+            keywords_evening = ["night", "sleep"]
+
+            if any(keyword in text for keyword in keywords_welcome):
+
+                response = welcome.handle(text, context, preferences)
+
+                return JsonResponse(response)
+
+            elif any(keyword in text for keyword in keywords_meeting):
+
+                response = meeting.handle(text, context, preferences)
+
+                return JsonResponse(response)
+
+            elif any(keyword in text for keyword in keywords_cooking):
+
+                response = cooking.handle(text, context, preferences)
+
+                return JsonResponse(response)
+
+            elif any(keyword in text for keyword in keywords_evening):
+
+                response = evening.handle(text, context, preferences)
+
+                return JsonResponse(response)
+
+            else:
+                response = {
+                    "text": "Sorry, I did not understand that",
+                    "html": "<p>Sorry, I did not understand that<p>",
+                    "follow_up": None,
+                    "context": None
+                }
+                return JsonResponse(response)
 
     else:
         return HttpResponse("Coordinator: Please POST data")
