@@ -65,7 +65,7 @@ $(document).ready(function () {
             //console.log("currently no more reminders")
         }
         
-    }, 10000);
+    }, 100000);
 
     updateReminders();
 
@@ -73,5 +73,5 @@ $(document).ready(function () {
         
         updateReminders();
         
-    }, 60000);
+    }, 120000);
 });

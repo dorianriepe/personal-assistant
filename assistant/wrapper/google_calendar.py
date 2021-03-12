@@ -1,4 +1,5 @@
 import os
+import pytz
 import pickle
 from datetime import datetime, timedelta
 from apiclient.discovery import build
@@ -39,13 +40,16 @@ class Calendar:
 
     def get_events_for_day(self, day):
         
+        timzone_berlin = pytz.timezone('Europe/Berlin')
+        now = datetime.now(timzone_berlin) # + timedelta(hours = 1)
+
         time_min = day.replace(hour=00, minute=00, second=00)
         time_max = day.replace(hour=23, minute=59, second=59)
         
         time_min = time_min.strftime("%Y-%m-%dT%H:%M:%SZ")
         time_max = time_max.strftime("%Y-%m-%dT%H:%M:%SZ")
         
-        response = self.service.events().list(calendarId=self.calendar_id, timeMin=time_min, timeMax=time_max).execute()
+        response = self.service.events().list(calendarId=self.calendar_id, timeMin=time_min, timeMax=time_max, timeZone="Europe/Berlin").execute()
 
         events = []
 
@@ -55,6 +59,9 @@ class Calendar:
                 event_start = datetime.strptime(event["start"]["dateTime"], '%Y-%m-%dT%H:%M:%S%z')
                 event_end = datetime.strptime(event["end"]["dateTime"], '%Y-%m-%dT%H:%M:%S%z')
             except KeyError:
+                continue
+
+            if now > event_start:
                 continue
 
             event_start = event_start.strftime("%H:%M")
@@ -67,11 +74,13 @@ class Calendar:
                 location = ""
 
             events.append({"title": title, "location": location, "start": event_start, "end": event_end})
-
+            
         return events 
 
     def get_events_today(self):
         
+        timzone_berlin = pytz.timezone('Europe/Berlin')
+        now = datetime.now(timzone_berlin) 
         today = datetime.now()
 
         events = self.get_events_for_day(today)
@@ -80,6 +89,8 @@ class Calendar:
 
     def get_first_event_tomorrow(self):
 
+        timzone_berlin = pytz.timezone('Europe/Berlin')
+        now = datetime.now(timzone_berlin) 
         tomorrow = datetime.now() + timedelta(days=1)
 
         events = self.get_events_for_day(tomorrow)
