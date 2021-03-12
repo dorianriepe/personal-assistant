@@ -100,5 +100,5 @@ class Welcome:
     if any(t in text for t in positive_text):
       spotify = Spotify()
       spotify.start_playback(playback_uri)
-    
+
     return { "text": None, "html": None, "follow_up": None, "context": None }
