@@ -72,11 +72,12 @@ $(document).ready(function () {
             console.log(text);
             $("#dialog").append("<div class=\"user\"></div>");
             $(".user").last().text(text);
-            // DO AJAX HERE
+
             const data = {};
             data["text"] = text;
             data["context"] = context;
             data["follow_up"] = follow_up;
+            data["preferences"] = getCookie("userName");
             setTimeout(function() {
                 context = null;
                 follow_up = null
@@ -88,15 +89,16 @@ $(document).ready(function () {
                     url: "http://localhost:8000/coordinator/",
                     data: data,
                     success: function (result) {
-                        console.log(data)
-                        console.log(result)
-                        //$("#div1").html(result.html);
+                        console.log(data);
+                        console.log(result);
                         context = result.context;
                         follow_up = result.follow_up;
-                        $("#dialog").append("<div class=\"assistant\"></div>");
-                        $(".assistant").last().html(result.html);
-                        speak(result.text)
-                        //console.log(context);
+                        if(result.text != null){
+                            $("#dialog").append("<div class=\"assistant\"></div>");
+                            $(".assistant").last().html(result.html);
+                            speak(result.text)
+                        }
+
                     },
                     dataType: "json"
                 }
@@ -142,4 +144,20 @@ function speak(text){
     utterance.pitch = 1;
     utterance.rate = 1;
   synth.speak(utterance);
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
