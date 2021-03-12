@@ -28,6 +28,7 @@ class Weather:
                     text += hour_data["weatherDesc"]
                     text += hour_data["tempC"]
                     text += hour_data["chanceofrain"]
+        text = "Today is good weather."
         return text
 
     def get_evening_forecast(self):
