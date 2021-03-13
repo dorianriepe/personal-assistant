@@ -31,7 +31,7 @@ $(document).ready(function () {
         console.log("WebKitSpeechAPI not supported")
     } else {
         console.log("WebKitSpeechAPI is supported")
-        
+
         recognition = new webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
@@ -78,7 +78,7 @@ $(document).ready(function () {
             data["context"] = context;
             data["follow_up"] = follow_up;
             data["preferences"] = getCookie("userName");
-            setTimeout(function() {
+            setTimeout(function () {
                 context = null;
                 follow_up = null
             }, 100000);
@@ -93,10 +93,13 @@ $(document).ready(function () {
                         console.log(result);
                         context = result.context;
                         follow_up = result.follow_up;
-                        if(result.text != null){
-                            $("#dialog").append("<div class=\"assistant\"></div>");
+                        if (result.text != null) {
+                            $("#dialog").append("<div class=\"assistant\"></div><br><br>");
                             $(".assistant").last().html(result.html);
+                            document.body.scrollTop = document.body.scrollHeight;
+                            document.documentElement.scrollTop = document.body.scrollHeight;
                             speak(result.text)
+
                         }
 
                     },
@@ -136,14 +139,14 @@ function capitalize(s) {
 }
 
 
-function speak(text){
+function speak(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = speechSynthesis.getVoices();
     utterance.voice = voices[41]
     utterance.lang = "en-US"
     utterance.pitch = 1;
     utterance.rate = 1;
-  synth.speak(utterance);
+    synth.speak(utterance);
 }
 
 function getCookie(cname) {
