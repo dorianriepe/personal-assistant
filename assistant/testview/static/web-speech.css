@@ -12,6 +12,8 @@
     color: gray;
 }
 
+
+
 #results {
     font-size: 14px;
     font-weight: bold;
@@ -94,3 +96,5 @@ select {
   right: 45px;
   font-size: 60px;
 }
+.overlay label  { color: white; }
+.overlay h2 { color: white;}
