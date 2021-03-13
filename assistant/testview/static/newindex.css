@@ -19,8 +19,8 @@ button {
     cursor: pointer;
     border-radius: 50%;
     left: 50%;
-    bottom:   5%;
-    position: absolute;
+    bottom:   0;
+    position: fixed;
 }
 
 .assistant { 
