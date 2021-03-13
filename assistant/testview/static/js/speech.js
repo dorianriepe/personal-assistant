@@ -78,7 +78,7 @@ $(document).ready(function () {
             data["context"] = context;
             data["follow_up"] = follow_up;
             data["preferences"] = getCookie("userName");
-            if(data["preferences"] == "") {
+            if (data["preferences"] == "") {
                 openNav();
                 return;
             }
@@ -174,7 +174,7 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
-    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "") {
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "") {
         alert("please fill all fields");
         return false;
     }
@@ -226,9 +226,11 @@ function checkCookie() {
         data = JSON.parse(user);
         document.getElementsByTagName('form')[0].usrname.value = data.name;
         document.getElementsByTagName('form')[0].bndesliga.value = data.liga;
+        document.getElementsByTagName('form')[0].lcation.value = data.location;
         document.getElementsByTagName('form')[0].clb.value = data.club;
         document.getElementsByTagName('form')[0].dts.value = data.diet;
-          document.getElementsByTagName('form')[0].hlth.value = data.health;
+        document.getElementsByTagName('form')[0].hlth.value = data.health;
+        document.getElementsByTagName('form')[0].nws.value = data.news;
         switch (data.news) {
             case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
                 document.getElementsByTagName('form')[0].nws.value = "News York Times";
@@ -241,6 +243,8 @@ function checkCookie() {
         }
         clubs(document.getElementsByName('bndesliga'));
         resetList(document.getElementsByName('nws'));
+        resetList(document.getElementsByName('dts'));
+        resetList(document.getElementsByName('hlth'));
     } else {
         openNav()
     }
