@@ -19,25 +19,18 @@ class Meeting:
             response = self.get_tasks(text, preferences)
         else:
             response = self.meeting(text, preferences)
-        
-        """response = {
-                "text": "Your next lecture Semantic Web starts in 10 minutes. Remember your \"exam questions\" assignment.",
-                "html": "<p>Your next lecture \"Semantic Web\" starts in 10 minutes. Remember your \"exam questions\" assignment. Here is the Zoom link:<p><a href=\"https://dhbw-stuttgart.zoom.us/j/2334403821?pwd=RWpkUjFQSnlZdVEwRDNLTWV0QS9tQT09\">Semantic Web</a>",
-                "follow_up": "meeting",
-                "context": "test"
-            }"""
 
         return response
 
     def meeting(self, text, preferences):
-        calendar = Calendar("DHBW6")
-        events = calendar.get_events_today().json()
+        calendar = Calendar("ASWE")
+        events = calendar.get_events_today()
 
         if len(events) > 0:
-            title = events[0].title
-            location = events[0].location
-            start = events[0].start
-            end = events[0].end
+            title = events[0]["title"]
+            location = events[0]["location"]
+            start = events[0]["start"]
+            end = events[0]["end"]
         else:
             response = {
                 "text": "You don't have any appointments today.",
@@ -69,7 +62,7 @@ class Meeting:
         tasks = Tasks()
         list_id = tasks.get_list_id(title)
         
-        if "zoom" in event.location:
+        if "zoom" in location:
             if list_id == "":
                 response = {
                     "text": "Your next appointment is " + title + " from " + start + " to " + end + ". The link will take you to the meeting.",

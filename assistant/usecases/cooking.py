@@ -42,7 +42,7 @@ class Cooking:
         # response = [{'title': 'Datenbanken', 'location': 'https://dhbw-stuttgart.zoom.us/j/99643057619', 'start': '10:00', 'end': '12:30'}, {'title': 'Security', 'location': '', 'start': '13:15', 'end': '15:45'}, {'title': 'Zero Knowledge', 'location': '', 'start': '13:00', 'end': '15:30'}]
 
         # search for a planned meal in calendar
-        calendar = Calendar("DHBW6")
+        calendar = Calendar("Cooking")
         events = calendar.get_events_today()
         meal = None
         for event in events:
@@ -199,46 +199,42 @@ class Cooking:
 
         else:
             # search for a planned meal in calendar
-            calendar = Calendar("DHBW6")
-            events = calendar.get_events_today().json()
+            calendar = Calendar("Cooking")
+            events = calendar.get_events_today()
+            print(events)
             meal = None
-            for event in events:
-                if "Meal" in event["title"]:
-                    meal = event["title"][6:]
-                    break
-
+            if len(events) > 0: 
+                meal = events[0]["title"]
+            print("Meal: "+str(meal))
             html_builder = HTMLResponseBuilder()
+            recipe_engine = Recipes.getInstance()
 
             if meal:
                 # search for recipe for planned meal
-                recipe_engine = Recipes.getInstance()
-                search_text = meal.replace(" ", ", ")
-                diet = preferences["diet"]
-                health = preferences["health"]
-                recipe = recipe_engine.get_recipe_by_ingredients(
-                    search_text, False, diet, health)
+                diet = preferences.get("diet", "balanced")
+                health = preferences.get("health", None)
+                recipe = recipe_engine.get_recipe_by_ingredients(meal, False, diet, health)
 
             else:
                 # get a random recipe
-                diet = preferences["diet"]
-                health = preferences["health"]
-                recipe = recipe_engine.get_recipe_by_ingredients(
-                    "rice", True, diet, health)
+                diet = preferences.get("diet", "balanced")
+                health = preferences.get("health", None)
+                recipe = recipe_engine.get_recipe_by_ingredients("rice", True, diet, health)
 
             # write ingredients to shopping list
-            ingredients_list = recipe.recipe_ingredients
+            ingredients_list = recipe["recipe_ingredients"]
             google_tasks = Tasks()
             today = datetime.date.today()
             for ingredient in ingredients_list:
                 google_tasks.add_task_to_list(
-                    "shoppingList"+today, ingredient)
+                    "shoppingList"+str(today), ingredient)
 
             response = {
                 "text": "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?",
                         "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
                                                                 recipe["recipe_name"],
-                                                                ("Calories: " + recipe["recipe_calories"] +
-                                                                    ", Time: " + recipe["recipe_time"]),
+                                                                ("Calories: " + str(recipe["recipe_calories"]) +
+                                                                    ", Time: " + str(recipe["recipe_time"])),
                                                                 recipe["recipe_image"],
                                                                 recipe["recipe_url"]),
                         "follow_up": "cooking",

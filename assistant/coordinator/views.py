@@ -11,6 +11,7 @@ from wrapper.google_calendar import Calendar
 from datetime import datetime, timedelta
 
 import pytz
+import json
 
 @csrf_exempt
 def index(request):
@@ -30,6 +31,7 @@ def index(request):
         cooking = Cooking()
         evening = Evening()
 
+        preferences = json.loads(preferences)
 
         if follow_up == "welcome":
             response = welcome.handle(text, context, preferences)
@@ -109,7 +111,7 @@ def reminder(request):
         cooking = now.replace(hour=cooking_default.hour, minute=cooking_default.minute)
         evening = now.replace(hour=evening_default.hour, minute=evening_default.minute)
 
-        calendar = Calendar("DHBW6")
+        calendar = Calendar("ASWE")
         todays_events = calendar.get_events_today()      
 
         for event in todays_events:
