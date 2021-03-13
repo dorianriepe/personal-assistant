@@ -314,13 +314,45 @@ function checkCookie() {
 
 function clubs(form) {
     var clubs1 = [];
-    clubs1[0] = 'Bayern Muenchen';
-    clubs1[1] = 'BVB Dortmund';
+    clubs1[0] = 'Bayern München';
+    clubs1[1] = 'Borussia Dortmund';
+    clubs1[2] = 'FC Schalke 04';
+    clubs1[3] = '1.FC Köln';
+    clubs1[4] = 'Borussia Mönchengladbach';
+    clubs1[5] = 'Eintracht Frankfurt';
+    clubs1[6] = 'Vfb Stuttgart';
+    clubs1[7] = 'Weder Bremen';
+    clubs1[8] = '1.FC Union Berlin';
+    clubs1[9] = 'Herta BSC';
+    clubs1[10] = 'Bayer 04 Leverkusen';
+    clubs1[11] = 'SC Freiburg';
+    clubs1[12] = 'Vfl Wolfsburg';
+    clubs1[13] = 'FC Augsburg';
+    clubs1[14] = 'Arminia Bielefeld';
+    clubs1[15] = '1.FSV Mainz 05';
+    clubs1[16] = 'TSG 1899 Hoffenheim';
+    clubs1[17] = 'RB Leipzig';
+
 
     var clubs2 = [];
-    clubs2[0] = 'HSV';
-    clubs2[1] = 'KSC';
-
+    clubs2[0] = 'VFL Bochum';
+    clubs2[1] = 'Hamburger SV';
+    clubs2[2] = 'Holstein Kiel';
+    clubs2[3] = 'SVgg Greuther Fürth';
+    clubs2[4] = 'Karlsruher SC';
+    clubs2[5] = '1.FC Heidenheim';
+    clubs2[6] = 'Fortuna Düsseldorf';
+    clubs2[7] = 'Hannorver 96';
+    clubs2[8] = 'Erzgebirge Aue';
+    clubs2[9] = 'FC St. Pauli';
+    clubs2[10] = 'SC Paderborn 07';
+    clubs2[11] = 'Jahn Regensburg';
+    clubs2[12] = 'SV Darmstadt 98';
+    clubs2[13] = '1.FC Nürnberg';
+    clubs2[14] = 'Eintracht Braunschweig';
+    clubs2[15] = 'Vfl Osnabrück';
+    clubs2[16] = 'SV Sandhausen';
+    clubs2[17] = 'Würzurger Kickers';
     var options = '';
 
     form[0].addEventListener('click', () => {
