@@ -13,8 +13,6 @@ class Welcome:
     self.context = None
 
   def handle(self, text, context, preferences):
-    
-    preferences = json.loads(preferences)
 
     if context == None:
       return self.welcome(text, preferences)
@@ -49,6 +47,7 @@ class Welcome:
     newsScraper = NewsScraper.getInstance()
     articleList = newsScraper.getArticleList()
     newspaper_logo = "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1491958734/bqp32una36b06hmbulla.png"
+    text += articleList[0]["title"]+": "
     text += articleList[0]["description"]+" "
 
     # Get Calendar Information
@@ -77,7 +76,6 @@ class Welcome:
   def workout(self, text, preferences):
     
     positive_text = ['yes', 'ok']
-
     if any(t in text for t in positive_text):
 
       text = "Ok. Should I start the playlist on Spotify?"
@@ -96,8 +94,8 @@ class Welcome:
   def spotify(self, text, preferences, playback_uri):
     
     positive_text = ['yes', 'ok']
-    
     if any(t in text for t in positive_text):
+
       spotify = Spotify()
       spotify.start_playback(playback_uri)
 
