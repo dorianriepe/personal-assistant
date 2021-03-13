@@ -61,9 +61,10 @@ class Cooking:
 
         # check for set free time (if... else...)
 
+        recipe_engine = Recipes.getInstance()
+
         if meal:
             # search for recipe for planned meal
-            recipe_engine = Recipes.getInstance()
             search_text = meal.replace(" ", ", ")
             diet = preferences["diet"]
             health = preferences["health"]
@@ -110,7 +111,10 @@ class Cooking:
         return response
 
     def shoppingListResponseHandling(self, text):
-        if ("no" in text):
+        
+        negative_text = ['no', 'dont']
+        if any(t in text for t in negative_text):
+
             google_tasks = Tasks()
             today = datetime.date.today()
             google_tasks.delete_list("shoppingList"+today)
@@ -125,7 +129,9 @@ class Cooking:
         return response
 
     def spotify(self, text, preferences):
-        if ("no" in text):
+        negative_text = ['no', 'dont']
+        if any(t in text for t in negative_text):
+
             response = {
                 "text": None,
                 "html": None,
@@ -158,7 +164,8 @@ class Cooking:
         return response
 
     def playSpotify(self, text, context, preferences):
-        if ("yes" in text):
+        positive_text = ['yes', 'please', 'ok', 'sure']
+        if any(t in text for t in positive_text):
 
             music = Spotify()
             uri = context[11:]
@@ -186,7 +193,9 @@ class Cooking:
         return response
 
     def cookNow(self, text, preferences):
-        if ("no" in text):
+        
+        negative_text = ['no', 'not']
+        if any(t in text for t in negative_text):
             response = {
                 "text": None,
                 "html": None,
