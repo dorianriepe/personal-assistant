@@ -23,9 +23,7 @@ def index(request):
         follow_up = request.POST['follow_up']
         context = request.POST['context']
         preferences = request.POST['preferences']
-        print("preferences views.index:")
-        print(type(preferences))
-        print(preferences)
+
         welcome = Welcome()
         meeting = Meeting()
         cooking = Cooking()
