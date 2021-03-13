@@ -52,7 +52,7 @@ def index(request):
             keywords_welcome = ["welcome", "morning", "hello", "hi"]
             keywords_meeting = ["meeting", "appointment"]
             keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
-            keywords_evening = ["night", "sleep"]
+            keywords_evening = ["night", "sleep", "evening"]
 
             if any(keyword in text for keyword in keywords_welcome):
 

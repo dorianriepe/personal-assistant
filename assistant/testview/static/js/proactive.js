@@ -45,7 +45,7 @@ function checkReminders() {
                     data: data,
                     success: function (result) {
                         //console.log(data)
-                        //console.log(result)
+                        console.log(result)
                         context = result.context;
                         follow_up = result.follow_up;
                         $("#dialog").append("<div class=\"assistant\"></div>");
@@ -64,15 +64,16 @@ function checkReminders() {
 }
 
 $(document).ready(function () {
-        
+    
+    updateReminders();
+    checkReminders();
+    
     var proactiveIntervalId = setInterval(function() {
         
         checkReminders();
 
     }, 100000);
 
-    updateReminders();
-    checkReminders();
 
     var updateIntervalId = setInterval(function() {
         
