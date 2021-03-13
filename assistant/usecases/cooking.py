@@ -21,18 +21,11 @@ class Cooking:
         elif (context == "proactiveCooking"):
             response = self.askForCooking(text, preferences)
         elif (context == "spotify"):
-            response = self.spotify(text, context, preferences)
+            response = self.spotify(text, preferences)
         elif ("playSpotify" in context):
             response = self.playSpotify(text, context, preferences)
         else:
             response = self.cookNow(text, preferences)
-
-        # response = {
-        #         "text": "Today you have planned spaghetti with tomato sauce. You don't have any appointments between 12am and 2pm. Shall I put the ingredients on the shopping list?",
-        #         "html": "<p>Today you have planned spaghetti with tomato sauce. You don't have any appointments between 12:00 and 14:00. Shall I put the ingredients on the shopping list?<p>",
-        #         "follow_up": "cooking",
-        #         "context": "test"
-        #     }
 
         return response
 
@@ -146,16 +139,20 @@ class Cooking:
             music = Spotify()
             playlist = music.get_playlist("cooking")[0]
 
+            text = "I found this playlist. Do you want me to start the playlist?"
+            html = html_builder.img_title_subtitle(
+                        text = "I found this playlist. Do you want me to start the playlist?",
+                        title = playlist["name"],
+                        subtitle = "by " + playlist["author"],
+                        image_url = playlist["image_url"],
+                        link = playlist["uri"]
+                    )
+
             response = {
-                "text": "I found this playlist. Do you want me to start the playlist?",
-                        "html": html_builder.img_title_subtitle("<p>I found this playlist. Do you want me to start the playlist?<\p>",
-                                                                playlist["name"],
-                                                                "by " +
-                                                                playlist["author"],
-                                                                playlist["image_url"],
-                                                                playlist["uri"]),
-                        "follow_up": "cooking",
-                        "context": "playSpotify" + playlist["uri"]
+                "text": text,
+                "html": html,
+                "follow_up": "cooking",
+                "context": "playSpotify" + playlist["uri"]
             }
 
         return response
@@ -164,8 +161,6 @@ class Cooking:
         if ("yes" in text):
 
             music = Spotify()
-            deviceID = music.get_device_id("CHANGE")
-
             uri = context[11:]
             music.start_playback(uri)
 
@@ -178,14 +173,16 @@ class Cooking:
 
         return response
 
+    #  this is for a proactive call from client
     def askForCooking(self, text, context, preferences):
-        # this is for a proactive call from client
+
         response = {
             "text": "Hey, have you already cooked? If not, would you like to cook now?",
             "html": "<p>Hey, have you already cooked? If not, would you like to cook now?<\p>",
             "follow_up": "cooking",
             "context": "cook"
         }
+
         return response
 
     def cookNow(self, text, preferences):
@@ -201,11 +198,9 @@ class Cooking:
             # search for a planned meal in calendar
             calendar = Calendar("Cooking")
             events = calendar.get_events_today()
-            print(events)
             meal = None
             if len(events) > 0: 
                 meal = events[0]["title"]
-            print("Meal: "+str(meal))
             html_builder = HTMLResponseBuilder()
             recipe_engine = Recipes.getInstance()
 
@@ -219,7 +214,7 @@ class Cooking:
                 # get a random recipe
                 diet = preferences.get("diet", "balanced")
                 health = preferences.get("health", None)
-                recipe = recipe_engine.get_recipe_by_ingredients("rice", True, diet, health)
+                recipe = recipe_engine.get_recipe_by_ingredients("potato", True, diet, health)
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
@@ -229,16 +224,21 @@ class Cooking:
                 google_tasks.add_task_to_list(
                     "shoppingList"+str(today), ingredient)
 
+            text = "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?"
+
+            html = html_builder.img_title_subtitle(
+                    text = "Here is your recipe. Would you like to listion to some music?",
+                    title = recipe["recipe_name"],
+                    subtitle = str(int(recipe["recipe_time"]))+" min, " + str(recipe["recipe_calories"]) + " calories",
+                    image_url =recipe["recipe_image"],
+                    link = recipe["recipe_url"]
+                )
+
             response = {
-                "text": "Today you have planned" + recipe["recipe_name"] + ". Would you like to listion to some music?",
-                        "html": html_builder.img_title_subtitle("<p>Here is your recipe. Would you like to listion to some music?<\p>",
-                                                                recipe["recipe_name"],
-                                                                ("Calories: " + str(recipe["recipe_calories"]) +
-                                                                    ", Time: " + str(recipe["recipe_time"])),
-                                                                recipe["recipe_image"],
-                                                                recipe["recipe_url"]),
-                        "follow_up": "cooking",
-                        "context": "spotify"
+                "text": text,
+                "html": html,
+                "follow_up": "cooking",
+                "context": "spotify"
             }
 
         return response
