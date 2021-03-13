@@ -31,7 +31,7 @@ class Evening:
     def goodEvening(self, preferences):
 
         # get whether there is a meeting the next day
-        calendar = Calendar("DHBW6")
+        calendar = Calendar("ASWE")
         first_meeting = calendar.get_first_event_tomorrow()
         if first_meeting:
             now = datetime.datetime.now()
@@ -55,12 +55,23 @@ class Evening:
         # check if bundesliga match day
         weekday = datetime.datetime.today().weekday()
         if weekday == 5 or weekday == 6:
-            bundesliga = Bundesliga(preferences["league"])
+
+            liga = preferences.get("liga", "1.Bundesliga")
+            if "1" in liga:
+                liga = 1
+            elif "2" in liga:
+                liga = 2
+            bundesliga = Bundesliga(liga)
             spieltag = bundesliga.get_bundesliga_results()
             spiel = spieltag[0]
 
-            speak_spieltag = "The Bundesliga played today. %s played %d to %d against %s. Shall I give you the current standings?" % (
-                spiel["team1ShortName"], spiel["toreTeam1"], spiel["toreTeam2"], spiel["team2ShortName"])
+            fav_team = preferences.get("club", "Dortmund")
+            for spiel in spieltag:
+                if spiel["team1ShortName"] == fav_team or spiel["team1ShortName"] == fav_team:
+                    speak_spieltag = spiel["team1ShortName"] + " played " + str(spiel["toreTeam1"])+"-"+str(spiel["toreTeam2"])+" against "+spiel["team2ShortName"]+". "
+            speak_spieltag += " Do you want to see the current standings?"
+            #speak_spieltag = "The Bundesliga played today. %s played %d to %d against %s. Shall I give you the current standings?" % (
+            #    spiel["team1ShortName"], spiel["toreTeam1"], spiel["toreTeam2"], spiel["team2ShortName"])
             speak_meeting = speak_meeting + " " + speak_spieltag
             context = "bundesliga"
 
@@ -70,68 +81,81 @@ class Evening:
             context = "weather"
 
         response = {
-            "speak": speak_meeting,
-            "html": "<p>" + speak_meeting + "<\p>",
-            "follow_up": "Evening",
+            "text": speak_meeting,
+            "html": "<p>" + speak_meeting + "</p>",
+            "follow_up": "evening",
             "context": context
         }
         return response
 
     def bundesligaTable(self, text, preferences):
+        
         if ("yes" in text):
-            bundesliga = Bundesliga(preferences["league"])
+            liga = preferences.get("liga", "1.Bundesliga")
+            if "1" in liga:
+                liga = 1
+            elif "2" in liga:
+                liga = 2
+            bundesliga = Bundesliga(liga)
             html_builder = HTMLResponseBuilder()
             table = bundesliga.get_table_top_five()
             text = "Here is the current league table, should I also give you a weather forecast for tomorrow?"
 
             speak_table = "Here is the current league table. "
             for rank in table:
-                speak_table = speak_table + " Rank" + \
-                    str(rank["rank"]) + rank["clubShortName"] + \
-                    " with " + str(rank["Points"]) + " Points"
+                if rank["rank"] < 3:
+                    speak_table += "On rank" + str(rank["rank"]) + " is " + rank["clubShortName"] + " with " + str(rank["points"]) + " points, "
+                if rank["rank"] == 3:
+                    speak_table += "On rank" + str(rank["rank"]) + " is " + rank["clubShortName"] + " with " + str(rank["points"]) + " points. "
+                if rank["rank"] == 4:
+                    speak_table += rank["clubShortName"] + " is on rank " + str(rank["rank"]) + " and "
+                if rank["rank"] == 5:
+                    speak_table += rank["clubShortName"] + " on " + str(rank["rank"]) + ". "
+                    
 
-            speak_table = speak_table + " Should I also give you a weather forecast for tomorrow?"
+            speak_table = speak_table + " Should I give you a weather forecast for tomorrow?"
             html = html_builder.rank_image_name(text, table)
 
             response = {
-                "speak": speak_table,
+                "text": speak_table,
                 "html": html,
-                "follow_up": "Evening",
+                "follow_up": "evening",
                 "context": "weather"
             }
             return response
 
         else:
-            speak_table = " Should I also give you a weather forecast for tomorrow?"
-            html = " Should I also give you a weather forecast for tomorrow?"
+            text = " Should I give you a weather forecast for tomorrow?"
             response = {
-                "speak": speak_table,
-                "html": html,
-                "follow_up": "Evening",
+                "text": text,
+                "html": "<p>"+text+"</p>",
+                "follow_up": "evening",
                 "context": "weather"
             }
             return response
 
     def weatherForecast(self, text, preferences):
+        
         if ("yes" in text):
+            
             weather = Weather(preferences["location"])
 
             text = weather.get_evening_forecast()
-            speak_weather = text + "Would you like to listen to some music to fall asleep?"
+            text += "Would you like to listen to some music to fall asleep?"
             response = {
-                "speak": speak_weather,
-                "html": "<p>" + speak_weather + "<\p>",
-                "follow_up": "Evening",
+                "text": text,
+                "html": "<p>" + text + "</p>",
+                "follow_up": "evening",
                 "context": "playlist"
             }
             return response
 
         else:
-            speak_weather = "Would you like to listen to some music to fall asleep?"
+            text = "Would you like to listen to some music to fall asleep?"
             response = {
-                "speak": speak_weather,
-                "html": "<p>" + speak_weather + "<\p>",
-                "follow_up": "Evening",
+                "text": text,
+                "html": "<p>" + text + "</p>",
+                "follow_up": "evening",
                 "context": "playlist"
             }
             return response
@@ -142,19 +166,26 @@ class Evening:
             playlist = spotify.get_playlist("sleep")[0]
             text = "I found a playlist for you. Shall I play it?"
 
-            html = HTMLResponseBuilder.time_title_subtitle(
-                text, playlist.title, playlist.author, playlist.image_url, playlist.uri)
+            html_response = HTMLResponseBuilder()
+            html = html_response.img_title_subtitle(
+                    text = text, 
+                    title = playlist["name"], 
+                    subtitle = playlist["author"], 
+                    image_url = playlist["image_url"], 
+                    link = playlist["uri"]
+                )
+
             response = {
-                "speak": text,
+                "text": text,
                 "html": html,
-                "follow_up": "Evening",
-                "context": playlist.uri
+                "follow_up": "evening",
+                "context": playlist["uri"]
             }
             return response
 
         else:
             response = {
-                "speak": None,
+                "text": None,
                 "html": None,
                 "follow_up": None,
                 "context": None
@@ -163,14 +194,15 @@ class Evening:
 
     def spotifyPlay(self, text, context):
         if ("yes" in text):
+
             spotify = Spotify()
-            spotify.get_device_id("WEB")
             spotify.start_playback(context)
 
         response = {
-            "speak": None,
+            "text": None,
             "html": None,
             "follow_up": None,
             "context": None
         }
+        
         return response

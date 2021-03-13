@@ -37,9 +37,10 @@ class Bundesliga:
         # response_spieltag = self.get_requests(
         #     'https://www.openligadb.de/api/getmatchdata/%s' % self.liga)
         response_spieltag = self.get_requests(
-            'https://www.openligadb.de/api/getmatchdata/%s/2020/21' % self.liga)
-        if response_spieltag:
-
+            'https://www.openligadb.de/api/getmatchdata/%s' % self.liga)
+        #print(response_spieltag.text)
+        if response_spieltag.status_code == 200:
+            response_spieltag = json.loads(response_spieltag.text)
             for spiel in response_spieltag:
                 spiel_dict = {
                     "liga": self.liga,
@@ -71,7 +72,8 @@ class Bundesliga:
         topFive = []
         response_table = self.get_requests(
             'https://www.openligadb.de/api/getbltable/%s/2020' % self.liga)
-        if response_table:
+        if response_table.status_code == 200:
+            response_table = json.loads(response_table.text)
             i = 1
             for rank in response_table:
                 if i < 6:

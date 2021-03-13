@@ -252,24 +252,24 @@ function checkCookie() {
 
 function clubs(form) {
     var clubs1 = [];
-    clubs1[0] = 'Bayern München';
-    clubs1[1] = 'Borussia Dortmund';
-    clubs1[2] = 'FC Schalke 04';
-    clubs1[3] = '1.FC Köln';
-    clubs1[4] = 'Borussia Mönchengladbach';
-    clubs1[5] = 'Eintracht Frankfurt';
-    clubs1[6] = 'Vfb Stuttgart';
-    clubs1[7] = 'Weder Bremen';
-    clubs1[8] = '1.FC Union Berlin';
-    clubs1[9] = 'Herta BSC';
-    clubs1[10] = 'Bayer 04 Leverkusen';
-    clubs1[11] = 'SC Freiburg';
-    clubs1[12] = 'Vfl Wolfsburg';
-    clubs1[13] = 'FC Augsburg';
-    clubs1[14] = 'Arminia Bielefeld';
-    clubs1[15] = '1.FSV Mainz 05';
-    clubs1[16] = 'TSG 1899 Hoffenheim';
-    clubs1[17] = 'RB Leipzig';
+    clubs1[0] = 'Bayern';
+    clubs1[1] = 'Dortmund';
+    clubs1[2] = 'Schalke';
+    clubs1[3] = 'Köln';
+    clubs1[4] = 'Gladbach';
+    clubs1[5] = 'Frankfurt';
+    clubs1[6] = 'Stuttgart';
+    clubs1[7] = 'Bremen';
+    clubs1[8] = 'Union Berlin';
+    clubs1[9] = 'Herta';
+    clubs1[10] = 'Leverkusen';
+    clubs1[11] = 'Freiburg';
+    clubs1[12] = 'Wolfsburg';
+    clubs1[13] = 'Augsburg';
+    clubs1[14] = 'Bielefeld';
+    clubs1[15] = 'Mainz';
+    clubs1[16] = 'Hoffenheim';
+    clubs1[17] = 'Leipzig';
 
 
     var clubs2 = [];
