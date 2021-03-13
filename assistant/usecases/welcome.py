@@ -45,7 +45,7 @@ class Welcome:
     
     # Get News
     newsScraper = NewsScraper.getInstance()
-    articleList = newsScraper.getArticleList()
+    articleList = newsScraper.getArticleList(preferences["news"])
     newspaper_logo = "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1491958734/bqp32una36b06hmbulla.png"
     text += articleList[0]["title"]+": "
     text += articleList[0]["description"]+" "
