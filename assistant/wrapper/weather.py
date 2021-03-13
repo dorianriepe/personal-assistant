@@ -18,19 +18,25 @@ class Weather:
         return datetime.now()
 
     def get_forecast(self):
-
         text = ""
-        for i, day in enumerate(self.weather_data.values()):
+        today = list(self.weather_data)[1]
+        today = self.weather_data[today]
 
-            for hour, hour_data in day.items():
-                if i > 0 or self.get_current_time().hour*100 < int(hour):
-                    text += str(int(int(hour)/100))+":00"
-                    text += hour_data["weatherDesc"]
-                    text += hour_data["tempC"]
-                    text += hour_data["chanceofrain"]
-        text = "Today is good weather."
+        if self.get_current_time().hour*100 <= 900:
+            text += "The weather this morning is " + today["900"]["weatherDesc"] + " at " + today["900"][
+                "tempC"] + " degrees.\n"
+            if int(today["900"]["chanceofrain"]) > 50:
+                text += "The chance of rain is about " + today["900"]["chanceofrain"] + " percent.\n"
+        elif self.get_current_time().hour*100 <= 1500:
+            text += "In the noon it's " + today["1500"]["weatherDesc"] + " at " + today["1500"][
+                "tempC"] + " degrees.\n"
+            if int(today["1500"]["chanceofrain"]) > 50:
+                text += "The chance of rain is about " + today["1500"]["chanceofrain"] + " percent.\n"
+        else:
+            text += "At night it's " + today["2100"]["weatherDesc"] + " at " + today["2100"]["tempC"] + " degrees.\n"
+            if int(today["2100"]["chanceofrain"]) > 50:
+                text += "The chance of rain is about " + today["2100"]["chanceofrain"] + " percent.\n"
         return text
-
     def get_evening_forecast(self):
         text = ""
         tomorrow = list(self.weather_data)[1]
@@ -73,7 +79,6 @@ class Weather:
         self.current_weatherDesc = current_weather["weatherDesc"][0]["value"]
 
         for day in values['weather']:
-
             for hourly in day['hourly']:
                 self.weather_data[day["date"]][hourly["time"]]["tempC"]=hourly["tempC"]
                 self.weather_data[day["date"]][hourly["time"]]["chanceofrain"]=hourly["chanceofrain"]
