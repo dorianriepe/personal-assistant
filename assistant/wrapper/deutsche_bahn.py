@@ -1,4 +1,5 @@
 import os
+import pytz
 import urllib
 import requests
 import xml.etree.ElementTree as ET
@@ -82,7 +83,7 @@ class Bahn:
 
     def get_next_departures(self):
         
-        now = datetime.now()
+        now = datetime.now() + timedelta(hours=1)
         now_p1 = now + timedelta(hours=1)
 
         next_departures = self.get_departures_for_time(now)

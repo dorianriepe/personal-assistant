@@ -79,32 +79,33 @@ class Meeting:
         
         else:
 
-            weather = Weather(preferences.location_weather)
+            weather = Weather(preferences.get("location", "Stuttgart"))
             current_weather = weather.get_current_weather()
 
-            deutsche_bahn = Bahn(preferences.train_station)
-            departures = deutsche_bahn.get_next_depatures()
-
-            departure_html= ""
+            deutsche_bahn = Bahn(preferences.get("train_station", "Goldberg"))
+            departures = deutsche_bahn.get_next_departures()
             
+            text = "Your next meeting " + title + " is starting at " + start + " in " + location + ". " + current_weather + " Below you find your next train departures. "
+            follow_up = None
+            context = None
+
+            if len(tasks) > 0:
+                text += " I also found tasks in your " + title + " to-do list. Do you want me to show you these tasks?"
+                follow_up = "meeting"
+                context = "get-tasks"
+
             html_response_builder = HTMLResponseBuilder()
+            html = html_response_builder.list_time_title(
+                    text=text, 
+                    departures=departures
+                )
 
-            departure_html = html_response_builder.list_time_title(departure_html, departures)
-            
-            if len(tasks) == 0:
-                response = {
-                "text": "Your next appointment is " + title + " from " + start + " to " + end + " at " + location + "."+ current_weather + "Here is a list of the next depatures at your train station.",
-                "html": "<p>Your next appointment is " + title + " from " + start + " to " + end + " at " + location + ". " + current_weather + "\nDepatures at " + train_station + depature_html + "<p>",
-                "follow_up": None,
-                "context": None
-                }
-            else:
-                response = {
-                "text": "Your next appointment is " + title + " from " + start + " to " + end + " at " + location + "."+ current_weather + "Here is a list of the next depatures at your train station. I found a tasklist with the title " + title + ". Do you want me to show you these tasks?",
-                "html": "<p>Your next appointment is " + title + " from " + start + " to " + end + " at " + location + ". " + current_weather + "\nDepatures at " + train_station + depature_html + "I found a tasklist with the title " + title + ". Do you want me to show you these tasks?</p>",
-                "follow_up": "meeting",
-                "context": "get_tasks"
-                }
+            response = {
+                "text": text,
+                "html": html,
+                "follow_up": follow_up,
+                "context": context
+            }
 
             return response
 
