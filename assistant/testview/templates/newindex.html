@@ -1,41 +1,97 @@
 {% load static %}
 <html lang="en">
 
-    <head>
-        <meta charset='utf-8'>
-        <title>assist-my-day</title>
-        <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
-        <link rel="stylesheet" href="{% static 'newindex.css' %}" />
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="{% static 'js/speech.js' %}"></script>
-        <script src="{% static 'js/proactive.js' %}"></script>
-    </head>
+<head>
+    <meta charset='utf-8'>
+    <title>assist-my-day</title>
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
+    <link rel="stylesheet" href="{% static 'newindex.css' %}"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'js/speech.js' %}"></script>
+    <script src="{% static 'js/proactive.js' %}"></script>
+</head>
 
-    <body>
+<body onload="checkCookie()">
 
-        <main>
-            
-            <div id="info"></div>
+<main>
 
-            <div id="dialog">
-                
-                <div class="assistant">
-                    <p>Hello,<br>How can I help you?</p>
-                </div>
-                
-            </div>
-            
-            <button onclick="topFunction()" id="start"></button>
+    <div id="info"></div>
+     <span style="font-size:30px;cursor:pointer;color: white;"onclick="openNav()">&#9776; preferences</span>
+    <div id="dialog">
+
+        <div class="assistant">
+            <p>Hello,<br>How can I help you?</p>
+        </div>
+
+    </div>
+
+    <button id="start"></button>
+
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content">
+            <h2>Preferences</h2>
+            <form>
+                <label for="nme">Nickname:</label><br>
+                <input type="text" value="" id="usrname" name='usrname'>
+                <br>
+                <label for="lcation">Location:</label><br>
+                <input type="text" value="" id="lcation" name='lcation'>
+                <br>
+                <label for="bndesliga">League:</label><br>
+                <input list="bundesliga" id="bndesliga" name="bndesliga"
+                       onchange="clubs(document.getElementsByName('bndesliga'))">
+                <datalist id="bundesliga">
+                    <option value="1.Bundesliga">
+                    <option value="2.Bundesliga">
+                </datalist>
+                <br>
+                <label for="clb">Club:</label><br>
+                <input list="club" id="clb" name="clb" onchange="resetList(document.getElementsByName('clb'))">
+                <datalist id="club">
+                </datalist>
+                <br>
+                <label for="nws">News Portal:</label><br>
+                <input list="news" id="nws" name="nws" onchange="resetList(document.getElementsByName('nws'))">
+                <datalist id="news">
+                    <option value="New York Times"></option>
+                    <option value="The Economist"></option>
+                    <option value="Deutsche Welle"></option>
+                </datalist>
+                <br>
+                <label for="hlth">Health Label:</label><br>
+                <input list="health" id="hlth" name="hlth" onchange="resetList(document.getElementsByName('hlth'))">
+                <datalist id="health">
+                    <option value="Peanut-Free"></option>
+                    <option value="Tree-Nut-Free"></option>
+                    <option value="Alcohol-Free"></option>
+                    <option value="Vegan"></option>
+                    <option value="Vegetarian"></option>
+                </datalist>
+                <br>
+                <label for="diets">Diets:</label><br>
+                <input list="diets" id="dts" name="dts" onchange="resetList(document.getElementsByName('dts'))">
+                <datalist id="diets">
+                    <option value="Balanced"></option>
+                    <option value="Low Fat"></option>
+                </datalist>
+                <br>
+                <br>
+                <input type="button" value="Go!" id="submit"
+                       onclick="putCookie(document.getElementsByTagName('form'));">
+            </form>
+            <div id="value"></div>
+        </div>
+    </div>
 
 
-        </main>
+</main>
 
-    </body>
+</body>
 
 
 <script>
 </script>
-
 
 
 </html>
