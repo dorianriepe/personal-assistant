@@ -5,7 +5,7 @@ from wrapper.html_response import HTMLResponseBuilder
 from wrapper.spotify import Spotify
 import json
 import datetime
-
+import random
 
 class Cooking:
 
@@ -223,7 +223,8 @@ class Cooking:
                 # get a random recipe
                 diet = preferences.get("diet", "balanced")
                 health = preferences.get("health", None)
-                recipe = recipe_engine.get_recipe_by_ingredients("potato", True, diet, health)
+                ingredients = ['rice', 'potato', 'chicken', 'noodles']
+                recipe = recipe_engine.get_recipe_by_ingredients(random.choice(ingredients), True, diet, health)
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
