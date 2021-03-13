@@ -78,6 +78,10 @@ $(document).ready(function () {
             data["context"] = context;
             data["follow_up"] = follow_up;
             data["preferences"] = getCookie("userName");
+            if(data["preferences"] == "") {
+                openNav();
+                return;
+            }
             setTimeout(function () {
                 context = null;
                 follow_up = null
@@ -149,6 +153,56 @@ function speak(text) {
     synth.speak(utterance);
 }
 
+
+function openNav() {
+    document.getElementById("myNav").style.display = "block";
+}
+
+function closeNav() {
+    checkCookie();
+    document.getElementById("myNav").style.display = "none";
+}
+
+var today = new Date();
+var expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
+
+function setCookie(name, value) {
+    document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+}
+
+function putCookie(form)
+//this should set the UserName cookie to the proper value;
+{
+    var obj = {};
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "") {
+        alert("please fill all fields");
+        return false;
+    }
+    switch (form[0].nws.value) {
+        case "New York Times":
+            obj["news"] = "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml";
+            break;
+        case "The Economist":
+            obj["news"] = "https://www.economist.com/the-world-this-week/rss.xml";
+            break;
+        case "Deutsche Welle":
+            obj["news"] = "https://rss.dw.com/rdf/rss-en-ger";
+
+    }
+
+    obj["name"] = form[0].usrname.value;
+    obj["location"] = form[0].lcation.value
+    obj["liga"] = form[0].bndesliga.value;
+    obj["club"] = form[0].clb.value;
+    obj["diet"] = form[0].dts.value;
+    obj["health"] = form[0].hlth.value;
+    // console.log();
+    setCookie("userName", JSON.stringify(obj));
+    closeNav();
+    return true;
+}
+
+
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -164,3 +218,106 @@ function getCookie(cname) {
     }
     return "";
 }
+
+
+function checkCookie() {
+    var user = getCookie("userName");
+    if (user != "") {
+        data = JSON.parse(user);
+        document.getElementsByTagName('form')[0].usrname.value = data.name;
+        document.getElementsByTagName('form')[0].bndesliga.value = data.liga;
+        document.getElementsByTagName('form')[0].clb.value = data.club;
+        document.getElementsByTagName('form')[0].dts.value = data.diet;
+          document.getElementsByTagName('form')[0].hlth.value = data.health;
+        switch (data.news) {
+            case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
+                document.getElementsByTagName('form')[0].nws.value = "News York Times";
+                break;
+            case "https://www.economist.com/the-world-this-week/rss.xml":
+                document.getElementsByTagName('form')[0].nws.value = "The Economist";
+                break;
+            case "https://rss.dw.com/rdf/rss-en-ger":
+                document.getElementsByTagName('form')[0].nws.value = "Deutsche Welle";
+        }
+        clubs(document.getElementsByName('bndesliga'));
+        resetList(document.getElementsByName('nws'));
+    } else {
+        openNav()
+    }
+}
+
+function clubs(form) {
+    var clubs1 = [];
+    clubs1[0] = 'Bayern München';
+    clubs1[1] = 'Borussia Dortmund';
+    clubs1[2] = 'FC Schalke 04';
+    clubs1[3] = '1.FC Köln';
+    clubs1[4] = 'Borussia Mönchengladbach';
+    clubs1[5] = 'Eintracht Frankfurt';
+    clubs1[6] = 'Vfb Stuttgart';
+    clubs1[7] = 'Weder Bremen';
+    clubs1[8] = '1.FC Union Berlin';
+    clubs1[9] = 'Herta BSC';
+    clubs1[10] = 'Bayer 04 Leverkusen';
+    clubs1[11] = 'SC Freiburg';
+    clubs1[12] = 'Vfl Wolfsburg';
+    clubs1[13] = 'FC Augsburg';
+    clubs1[14] = 'Arminia Bielefeld';
+    clubs1[15] = '1.FSV Mainz 05';
+    clubs1[16] = 'TSG 1899 Hoffenheim';
+    clubs1[17] = 'RB Leipzig';
+
+
+    var clubs2 = [];
+    clubs2[0] = 'VFL Bochum';
+    clubs2[1] = 'Hamburger SV';
+    clubs2[2] = 'Holstein Kiel';
+    clubs2[3] = 'SVgg Greuther Fürth';
+    clubs2[4] = 'Karlsruher SC';
+    clubs2[5] = '1.FC Heidenheim';
+    clubs2[6] = 'Fortuna Düsseldorf';
+    clubs2[7] = 'Hannorver 96';
+    clubs2[8] = 'Erzgebirge Aue';
+    clubs2[9] = 'FC St. Pauli';
+    clubs2[10] = 'SC Paderborn 07';
+    clubs2[11] = 'Jahn Regensburg';
+    clubs2[12] = 'SV Darmstadt 98';
+    clubs2[13] = '1.FC Nürnberg';
+    clubs2[14] = 'Eintracht Braunschweig';
+    clubs2[15] = 'Vfl Osnabrück';
+    clubs2[16] = 'SV Sandhausen';
+    clubs2[17] = 'Würzurger Kickers';
+    var options = '';
+
+    form[0].addEventListener('click', () => {
+        if (form[0].value) {
+            form[0].value = "";
+            document.getElementsByTagName('form')[0].clb.value = "";
+            resetList(document.getElementsByName('clb'));
+
+        }
+    });
+
+    if (form[0].value == "1.Bundesliga") {
+        for (var i = 0; i < clubs1.length; i++) {
+            options += '<option value="' + clubs1[i] + '" />';
+        }
+    } else {
+        for (var i = 0; i < clubs2.length; i++) {
+            options += '<option value="' + clubs2[i] + '" />';
+        }
+    }
+    document.getElementById('club').innerHTML = options;
+
+}
+
+function resetList(form) {
+    form[0].addEventListener('click', () => {
+        if (form[0].value) {
+            form[0].value = "";
+        }
+    });
+}
+
+
+
