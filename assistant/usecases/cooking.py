@@ -38,10 +38,8 @@ class Cooking:
         calendar = Calendar("Cooking")
         events = calendar.get_events_today()
         meal = None
-        for event in events:
-            if "Meal" in event["title"]:
-                meal = event["title"][6:]
-                break
+        if len(events) > 0: 
+            meal = events[0]["title"]
 
         # look for next free time
         endTime = None
@@ -65,11 +63,10 @@ class Cooking:
 
         if meal:
             # search for recipe for planned meal
-            search_text = meal.replace(" ", ", ")
             diet = preferences["diet"]
             health = preferences["health"]
             recipe = recipe_engine.get_recipe_by_ingredients(
-                search_text, False, diet, health)
+                meal, False, diet, health)
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_igredients"]
@@ -90,11 +87,11 @@ class Cooking:
             # get a random recipe
             diet = preferences["diet"]
             health = preferences["health"]
-            recipe = recipe_engine.get_recipe_by_ingredients(
-                "rice", True, diet, health)
+            ingredients = ['rice', 'potato', 'chicken', 'noodles']
+            recipe = recipe_engine.get_recipe_by_ingredients(random.choice(ingredients), True, diet, health)
 
             # write ingredients to shopping list
-            ingredients_list = recipe.recipe_ingredients
+            ingredients_list = recipe["recipe_ingredients"]
             google_tasks = Tasks()
             today = datetime.date.today()
             for ingredient in ingredients_list:
