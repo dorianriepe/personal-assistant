@@ -1,6 +1,9 @@
 .DS_Store
 client-secret.json
+calendar-client-secret.json
 tasks-client-secret.json
+assistant/calendar-client-secret.json
+assistant/calendar-credentials.pkl
 credentials.pkl
 tasks-credentials.pkl
 check_recipe_api.py

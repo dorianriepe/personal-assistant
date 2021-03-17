@@ -74,7 +74,11 @@ class Spotify:
         return list_of_playlists
 
     def start_playback(self, playlist_uri):
+
+        self.get_device_id("iPhone von Nils")
+
         if self.deviceID:
+
             ENDPOINT = "/v1/me/player/play?device_id=%s" % self.deviceID
             data = {"context_uri": playlist_uri}
 
@@ -84,14 +88,17 @@ class Spotify:
             status_code = response.status_code
             if status_code == 401:
                 self.request_new_token()
-                response = requests.put(self.api_url+ENDPOINT, data=data, headers={
-                                        "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + self.token})
+                response = requests.put(self.api_url+ENDPOINT, data=data, headers={"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + self.token})
         else:
             print("Error no DeviceID")
 
     def pause_playback(self):
+
+        self.get_device_id("iPhone von Nils")
+
         if self.deviceID:
             ENDPOINT = "/v1/me/player/pause?device_id=%s" % self.deviceID
             self.put_request(ENDPOINT)
+            
         else:
             print("Error no DeviceID")

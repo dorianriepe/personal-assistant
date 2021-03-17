@@ -1,36 +1,36 @@
 {% load static %}
 <html lang="en">
+
 <head>
     <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Web Speech APIU</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'web-speech.css' %}"/>
+    <title>assist-my-day</title>
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
+    <link rel="stylesheet" href="{% static 'newindex.css' %}"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'js/speech.js' %}"></script>
+    <script src="{% static 'js/proactive.js' %}"></script>
+    <script src="{% static 'js/spotify.js' %}"></script>
 </head>
+
 <body onload="checkCookie()">
+
 <main>
-    <div class="container mt-3">
-        <h3 class="text-center">Web Speech API Demo</h3>
-        <span style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776; preferences</span>
-        <div id="info"></div>
-        <div id="div1">How can I help you?</div>
-        <div class="float-right">
-            <button id="start_button">
-                <img id="start_img" src="../static/images/mic.gif" alt="Start"></button>
+
+    <div id="info"></div>
+     <span style="font-size:30px;cursor:pointer;color: white;"onclick="openNav()">&#9776; preferences</span>
+    <div id="dialog">
+
+        <div class="assistant">
+            <p>Hello,<br>How can I help you?</p>
         </div>
-        <div id="results">
-            <span id="final_span" class="final"></span>
-            <span id="interim_span" class="interim"></span>
-            <p>
-        </div>
-        <div class="col-12 col-md-4 col-lg-6 mt-3 mt-md-0 p-0 m-0">
-            <div class="float-right">
-                <button id="ajax_button" class="btn btn-primary ">POST</button>
-            </div>
-        </div>
+
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button id="start"></button>
+
     <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <div class="overlay-content">
@@ -43,7 +43,8 @@
                 <input type="text" value="" id="lcation" name='lcation'>
                 <br>
                 <label for="bndesliga">League:</label><br>
-                <input list="bundesliga" id="bndesliga" name="bndesliga" onchange="clubs(document.getElementsByName('bndesliga'))">
+                <input list="bundesliga" id="bndesliga" name="bndesliga"
+                       onchange="clubs(document.getElementsByName('bndesliga'))">
                 <datalist id="bundesliga">
                     <option value="1.Bundesliga">
                     <option value="2.Bundesliga">
@@ -65,18 +66,18 @@
                 <label for="hlth">Health Label:</label><br>
                 <input list="health" id="hlth" name="hlth" onchange="resetList(document.getElementsByName('hlth'))">
                 <datalist id="health">
-                    <option value="Peanut-Free"></option>
-                    <option value="Tree-Nut-Free"></option>
-                    <option value="Alcohol-Free"></option>
-                    <option value="Vegan"></option>
-                    <option value="Vegetarian"></option>
+                    <option value="peanut-free"></option>
+                    <option value="tree-nut-free"></option>
+                    <option value="alcohol-free"></option>
+                    <option value="vegan"></option>
+                    <option value="vegetarian"></option>
                 </datalist>
                 <br>
                 <label for="diets">Diets:</label><br>
                 <input list="diets" id="dts" name="dts" onchange="resetList(document.getElementsByName('dts'))">
                 <datalist id="diets">
-                    <option value="Balanced"></option>
-                    <option value="Low Fat"></option>
+                    <option value="balanced"></option>
+                    <option value="low-fat"></option>
                 </datalist>
                 <br>
                 <br>
@@ -87,8 +88,14 @@
         </div>
     </div>
 
-</main>
-<script src="{% static 'js/web-speech-api.js' %}"></script>
-</body>
-</html>
 
+</main>
+
+</body>
+
+
+<script>
+</script>
+
+
+</html>

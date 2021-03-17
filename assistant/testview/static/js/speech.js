@@ -1,110 +1,115 @@
-var messages = {
-    "start": {
-        msg: 'Click on the microphone icon and begin speaking.',
-        class: 'alert-success'
-    },
-    "speak_now": {
-        msg: 'Speak now.',
-        class: 'alert-success'
-    },
-    "no_speech": {
-        msg: 'No speech was detected. You may need to adjust your <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a>.',
-        class: 'alert-danger'
-    },
-    "no_microphone": {
-        msg: 'No microphone was found. Ensure that a microphone is installed and that <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a> are configured correctly.',
-        class: 'alert-danger'
-    },
-    "allow": {
-        msg: 'Click the "Allow" button above to enable your microphone.',
-        class: 'alert-warning'
-    },
-    "denied": {
-        msg: 'Permission to use microphone was denied.',
-        class: 'alert-danger'
-    },
-    "blocked": {
-        msg: 'Permission to use microphone is blocked. To change, go to chrome://settings/content/microphone',
-        class: 'alert-danger'
-    },
-    "upgrade": {
-        msg: 'Web Speech API is not supported by this browser. It is only supported by <a href="//www.google.com/chrome">Chrome</a> version 25 or later on desktop and Android mobile.',
-        class: 'alert-danger'
-    },
-    "stop": {
-        msg: 'Stop listening, click on the microphone icon to restart',
-        class: 'alert-success'
-    },
-    "copy": {
-        msg: 'Content copy to clipboard successfully.',
-        class: 'alert-success'
-    },
-}
-
 var final_transcript = '';
 var recognizing = false;
 var ignore_onend;
 var start_timestamp;
 var recognition;
 
-var context = null;
+var text = "";
 
+var context = null;
 var follow_up = null;
 
+const synth = window.speechSynthesis;
+
 $(document).ready(function () {
+
+
+    $("#start").click(function () {
+        if (recognizing) {
+            recognition.stop();
+            return;
+        }
+        final_transcript = '';
+        recognition.lang = 'en-US';
+        recognition.start();
+        ignore_onend = false;
+        start_timestamp = event.timeStamp;
+    });
+
+
     if (!('webkitSpeechRecognition' in window)) {
-        upgrade();
+        console.log("WebKitSpeechAPI not supported")
     } else {
-        showInfo('start');
-        start_button.style.display = 'inline-block';
+        console.log("WebKitSpeechAPI is supported")
+
         recognition = new webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
 
         recognition.onstart = function () {
             recognizing = true;
-            showInfo('speak_now');
-            start_img.src = 'static/images/mic-animation.gif';
+            text = "";
         };
 
         recognition.onerror = function (event) {
+            console.log("onerror")
             if (event.error === 'no-speech') {
-                start_img.src = 'static/images/mic.gif';
-                showInfo('no_speech');
+                console.log("no speech")
                 ignore_onend = true;
             }
             if (event.error === 'audio-capture') {
-                start_img.src = 'static/images/mic.gif';
-                showInfo('no_microphone');
+                console.log("no microphone")
                 ignore_onend = true;
             }
             if (event.error === 'not-allowed') {
                 if (event.timeStamp - start_timestamp < 100) {
-                    showInfo('blocked');
+                    console.log("blocked")
                 } else {
-                    showInfo('denied');
+                    console.log("denied")
                 }
                 ignore_onend = true;
             }
         };
 
-        recognition.onend = function () {
+        recognition.onend = function (event) {
             recognizing = false;
             if (ignore_onend) {
                 return;
             }
-            start_img.src = 'static/images/mic.gif';
             if (!final_transcript) {
-                showInfo('start');
                 return;
             }
-            showInfo('stop');
-            if (window.getSelection) {
-                window.getSelection().removeAllRanges();
-                var range = document.createRange();
-                range.selectNode(document.getElementById('final_span'));
-                window.getSelection().addRange(range);
+            console.log(text);
+            $("#dialog").append("<div class=\"user\"></div>");
+            $(".user").last().text(text);
+
+            const data = {};
+            data["text"] = text;
+            data["context"] = context;
+            data["follow_up"] = follow_up;
+            data["preferences"] = getCookie("userName");
+            if (data["preferences"] == "") {
+                openNav();
+                return;
             }
+            setTimeout(function () {
+                context = null;
+                follow_up = null
+            }, 100000);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "http://localhost:8000/coordinator/",
+                    data: data,
+                    success: function (result) {
+                        console.log(data);
+                        console.log(result);
+                        context = result.context;
+                        follow_up = result.follow_up;
+                        if (result.text != null) {
+                            $("#dialog").append("<div class=\"assistant\"></div><br><br>");
+                            $(".assistant").last().html(result.html);
+                            document.body.scrollTop = document.body.scrollHeight;
+                            document.documentElement.scrollTop = document.body.scrollHeight;
+                            speak(result.text)
+
+                        }
+
+                    },
+                    dataType: "json"
+                }
+            );
         };
 
         recognition.onresult = function (event) {
@@ -116,19 +121,13 @@ $(document).ready(function () {
                     interim_transcript += event.results[i][0].transcript;
                 }
             }
-            final_transcript = capitalize(final_transcript);
-            final_span.innerHTML = linebreak(final_transcript);
-            interim_span.innerHTML = linebreak(interim_transcript);
+            final_transcript = linebreak(capitalize(final_transcript));
+            text += final_transcript;
         };
+
     }
+
 });
-
-
-function upgrade() {
-    start_button.style.visibility = 'hidden';
-    showInfo('upgrade');
-}
-
 
 function linebreak(s) {
     var one_line = /\n/g;
@@ -136,50 +135,12 @@ function linebreak(s) {
     return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
 }
 
-
 function capitalize(s) {
     var first_char = /\S/;
     return s.replace(first_char, function (m) {
         return m.toUpperCase();
     });
 }
-
-$("#ajax_button").click(function () {
-    const data = {};
-    data["text"] = document.getElementById('final_span').innerText;
-    data["context"] = context;
-    data["follow_up"] = follow_up;
-    data["preferences"] = JSON.parse(getCookie("userName"));
-    setTimeout(function () {
-        context = null;
-        follow_up = null
-    }, 100000);
-
-    $.ajax(
-        {
-            type: "POST",
-            url: "http://localhost:8000/coordinator/",
-            data: data,
-            success: function (result) {
-                console.log(data)
-                $("#div1").html(result.html);
-                context = result.context;
-                follow_up = result.follow_up;
-                speak(result.text)
-                console.log(context);
-            },
-            dataType: "json"
-        }
-    );
-});
-
-setTimeout(function () {
-    context = null;
-    follow_up = null
-}, 1000);
-
-
-const synth = window.speechSynthesis;
 
 
 function speak(text) {
@@ -192,36 +153,6 @@ function speak(text) {
     synth.speak(utterance);
 }
 
-
-$("#start_button").click(function () {
-    if (recognizing) {
-        recognition.stop();
-        return;
-    }
-    final_transcript = '';
-    recognition.lang = 'en-US';
-    recognition.start();
-    ignore_onend = false;
-    final_span.innerHTML = '';
-    interim_span.innerHTML = '';
-    start_img.src = 'static/images/mic-slash.gif';
-    showInfo('allow');
-    start_timestamp = event.timeStamp;
-});
-
-
-function showInfo(s) {
-    if (s) {
-        var message = messages[s];
-        $("#info").html(message.msg);
-        $("#info").removeClass();
-        $("#info").addClass('alert');
-        $("#info").addClass(message.class);
-    } else {
-        $("#info").removeClass();
-        $("#info").addClass('d-none');
-    }
-}
 
 function openNav() {
     document.getElementById("myNav").style.display = "block";
@@ -243,7 +174,7 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
-    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "") {
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "") {
         alert("please fill all fields");
         return false;
     }
@@ -263,6 +194,8 @@ function putCookie(form)
     obj["location"] = form[0].lcation.value
     obj["liga"] = form[0].bndesliga.value;
     obj["club"] = form[0].clb.value;
+    obj["diet"] = form[0].dts.value;
+    obj["health"] = form[0].hlth.value;
     // console.log();
     setCookie("userName", JSON.stringify(obj));
     closeNav();
@@ -291,10 +224,13 @@ function checkCookie() {
     var user = getCookie("userName");
     if (user != "") {
         data = JSON.parse(user);
-        document.getElementById("div1").innerHTML = "How can I help you? " + data.name;
         document.getElementsByTagName('form')[0].usrname.value = data.name;
         document.getElementsByTagName('form')[0].bndesliga.value = data.liga;
+        document.getElementsByTagName('form')[0].lcation.value = data.location;
         document.getElementsByTagName('form')[0].clb.value = data.club;
+        document.getElementsByTagName('form')[0].dts.value = data.diet;
+        document.getElementsByTagName('form')[0].hlth.value = data.health;
+        document.getElementsByTagName('form')[0].nws.value = data.news;
         switch (data.news) {
             case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
                 document.getElementsByTagName('form')[0].nws.value = "News York Times";
@@ -307,6 +243,8 @@ function checkCookie() {
         }
         clubs(document.getElementsByName('bndesliga'));
         resetList(document.getElementsByName('nws'));
+        resetList(document.getElementsByName('dts'));
+        resetList(document.getElementsByName('hlth'));
     } else {
         openNav()
     }
@@ -314,24 +252,24 @@ function checkCookie() {
 
 function clubs(form) {
     var clubs1 = [];
-    clubs1[0] = 'Bayern München';
-    clubs1[1] = 'Borussia Dortmund';
-    clubs1[2] = 'FC Schalke 04';
-    clubs1[3] = '1.FC Köln';
-    clubs1[4] = 'Borussia Mönchengladbach';
-    clubs1[5] = 'Eintracht Frankfurt';
-    clubs1[6] = 'Vfb Stuttgart';
-    clubs1[7] = 'Weder Bremen';
-    clubs1[8] = '1.FC Union Berlin';
-    clubs1[9] = 'Herta BSC';
-    clubs1[10] = 'Bayer 04 Leverkusen';
-    clubs1[11] = 'SC Freiburg';
-    clubs1[12] = 'Vfl Wolfsburg';
-    clubs1[13] = 'FC Augsburg';
-    clubs1[14] = 'Arminia Bielefeld';
-    clubs1[15] = '1.FSV Mainz 05';
-    clubs1[16] = 'TSG 1899 Hoffenheim';
-    clubs1[17] = 'RB Leipzig';
+    clubs1[0] = 'Bayern';
+    clubs1[1] = 'Dortmund';
+    clubs1[2] = 'Schalke';
+    clubs1[3] = 'Köln';
+    clubs1[4] = 'Gladbach';
+    clubs1[5] = 'Frankfurt';
+    clubs1[6] = 'Stuttgart';
+    clubs1[7] = 'Bremen';
+    clubs1[8] = 'Union Berlin';
+    clubs1[9] = 'Herta';
+    clubs1[10] = 'Leverkusen';
+    clubs1[11] = 'Freiburg';
+    clubs1[12] = 'Wolfsburg';
+    clubs1[13] = 'Augsburg';
+    clubs1[14] = 'Bielefeld';
+    clubs1[15] = 'Mainz';
+    clubs1[16] = 'Hoffenheim';
+    clubs1[17] = 'Leipzig';
 
 
     var clubs2 = [];

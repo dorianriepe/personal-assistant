@@ -6,28 +6,22 @@ class NewsScraper:
     __instance = None
 
     @staticmethod
-    def getInstance(feed_url='https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml'):
+    def getInstance():
         if NewsScraper.__instance is None:
-            NewsScraper(feed_url)
+            NewsScraper()
         return NewsScraper.__instance
 
-    def __init__(self, feed_url='https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml'):
+    def __init__(self):
         if NewsScraper.__instance is None:
-            self.feed_url = feed_url
             NewsScraper.__instance = self
         else:
             raise Exception("This class is a singleton!")
 
-    def setFeedUrl(self, feed_url):
-        self.feed_url = feed_url
 
-    def getFeedUrl(self):
-        return self.feed_url
-
-    def getArticleList(self):
+    def getArticleList(self, feed_url):
         article_list = []
         try:
-            articles = self.__find_articles()
+            articles = self.__find_articles(feed_url)
             for a in articles[:5]:
                 title = a.find('title').text
                 description = a.find('description').text
@@ -43,16 +37,14 @@ class NewsScraper:
             print('The scraping job failed. See exception: ')
             print(e)
 
-    def __find_articles(self):
-        xml = self.getResponse()
+    def __find_articles(self, feed_url):
+        xml = self.getResponse(feed_url)
         soup = BeautifulSoup(xml, features='xml')
         articles = soup.findAll('item')
         return articles
 
-    def getResponse(self):
-        r = requests.get(self.feed_url)
+    def getResponse(self, feed_url):
+        r = requests.get(feed_url)
         return r.content
 
 
-inst = NewsScraper.getInstance()
-print( inst.getArticleList())
