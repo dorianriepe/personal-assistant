@@ -15,22 +15,26 @@ class Cooking:
 
     def handle(self, text, context, preferences):
 
+        # print("text:", text)
+        # print("context:", context)
+        # print("preferences:", preferences)
+
         if (context == "proactiveShoopingList"):
-            response = self.shoppingList(text, preferences)
+            response = self.shoppingList(preferences)
         elif (context == "shoppingList"):
             response = self.shoppingListResponseHandling(text)
         elif (context == "proactiveCooking"):
             response = self.askForCooking(text, preferences)
         elif (context == "spotify"):
             response = self.spotify(text, preferences)
-        elif ("playSpotify" in context):
+        elif (context and ("playSpotify" in context)):
             response = self.playSpotify(text, context, preferences)
         else:
             response = self.cookNow(text, preferences)
 
         return response
 
-    def shoppingList(self, text, preferences):
+    def shoppingList(self, preferences):
         # this is for a proactive call from client
         # look calendar up
         # response = [{'title': 'Datenbanken', 'location': 'https://dhbw-stuttgart.zoom.us/j/99643057619', 'start': '10:00', 'end': '12:30'}, {'title': 'Security', 'location': '', 'start': '13:15', 'end': '15:45'}, {'title': 'Zero Knowledge', 'location': '', 'start': '13:00', 'end': '15:30'}]
@@ -58,6 +62,8 @@ class Cooking:
                 else:
                     break
 
+        endTime = "14:00"
+        startTime = "16:00"
         # check for set free time (if... else...)
 
         recipe_engine = Recipes.getInstance()
@@ -75,11 +81,11 @@ class Cooking:
             today = datetime.date.today()
             for ingredient in ingredients_list:
                 google_tasks.add_task_to_list(
-                    "shoppingList"+today, ingredient)
+                    "shoppingList" + today.strftime("%d/%m/%Y"), ingredient)
 
             response = {
                 "text": "Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you have planned " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                        "html": "<p>Shall I put the ingredients on the shopping list?</p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -90,7 +96,7 @@ class Cooking:
             health = preferences["health"]
             ingredients = ['rice', 'potato', 'chicken', 'noodles']
             recipe = recipe_engine.get_recipe_by_ingredients(
-                random.choice(ingredients), True, diet, health)
+                random.choice(ingredients), False, diet, health)
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
@@ -98,11 +104,11 @@ class Cooking:
             today = datetime.date.today()
             for ingredient in ingredients_list:
                 google_tasks.add_task_to_list(
-                    "shoppingList"+today, ingredient)
+                    "shoppingList" + today.strftime("%d/%m/%Y"), ingredient)
 
             response = {
                 "text": "Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?",
-                        "html": "<p>Today you haven't planned anything to eat. But I found a recipe for " + recipe["recipe_name"] + ". You don't have any appointments between " + endTime + "and " + startTime + ". Shall I put the ingredients on the shopping list?<\p>",
+                        "html": "<p>Shall I put the ingredients on the shopping list?</p>",
                         "follow_up": "cooking",
                         "context": "shoppingList"
             }
@@ -116,7 +122,7 @@ class Cooking:
 
             google_tasks = Tasks()
             today = datetime.date.today()
-            google_tasks.delete_list("shoppingList"+today)
+            google_tasks.delete_list("shoppingList"+today.strftime("%d/%m/%Y"))
 
         response = {
             "text": None,
@@ -184,7 +190,7 @@ class Cooking:
 
         response = {
             "text": "Hey, have you already cooked? If not, would you like to cook now?",
-            "html": "<p>Hey, have you already cooked? If not, would you like to cook now?<\p>",
+            "html": "<p>Hey, have you already cooked? If not, would you like to cook now?</p>",
             "follow_up": "cooking",
             "context": "cook"
         }
@@ -219,13 +225,21 @@ class Cooking:
                 recipe = recipe_engine.get_recipe_by_ingredients(
                     meal, False, diet, health)
 
+                text = "Today you haven't planned anything to eat. But I found a recipe for " + \
+                    recipe["recipe_name"] + \
+                    ". Would you like to listen to some music?"
+
             else:
                 # get a random recipe
                 diet = preferences.get("diet", "balanced")
                 health = preferences.get("health", None)
                 ingredients = ['rice', 'potato', 'chicken', 'noodles']
                 recipe = recipe_engine.get_recipe_by_ingredients(
-                    random.choice(ingredients), True, diet, health)
+                    random.choice(ingredients), False, diet, health)
+
+                text = "Today you have planned " + \
+                    recipe["recipe_name"] + \
+                    ". Would you like to listen to some music?"
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
@@ -235,12 +249,8 @@ class Cooking:
                 google_tasks.add_task_to_list(
                     "shoppingList"+str(today), ingredient)
 
-            text = "Today you have planned" + \
-                recipe["recipe_name"] + \
-                ". Would you like to listion to some music?"
-
             html = html_builder.img_title_subtitle(
-                text="Here is your recipe. Would you like to listion to some music?",
+                text="Here is your recipe. Would you like to listen to some music?",
                 title=recipe["recipe_name"],
                 subtitle=str(int(recipe["recipe_time"]))+" min, " +
                 str(recipe["recipe_calories"]) + " calories",
