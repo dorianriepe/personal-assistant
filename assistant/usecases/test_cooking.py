@@ -10,15 +10,18 @@ from usecases.cooking import Cooking
 
 class TestCooking(TestCase):
 
-    def __init__(self, methodName):
-        super().__init__(methodName)
+    def __init__(self):
+        super().__init__()
 
+        # set preferences for every method
         self.preferences = {'news': 'https://rss.dw.com/rdf/rss-en-ger', 'name': 'Philip', 'location': 'Stuttgart',
                             'liga': '1.Bundesliga', 'club': 'Bayern', 'diet': 'balanced', 'health': 'alcohol-free'}
+        # initialize a cooking use case instance
         self.instance = Cooking()
 
     def test_cookNow(self):
         response = self.instance.handle("i'm hungry", None, self.preferences)
+        # use regex to compare responses
         expected_response_regex = """{'text': 'Today you.*', 'html': '<p>.*</p><div class="img-title-subtitle">.*</div>', 'follow_up': 'cooking', 'context': 'spotify'}"""
 
         self.assertTrue(re.match(expected_response_regex, response))
@@ -26,7 +29,7 @@ class TestCooking(TestCase):
     def test_shoppingList(self):
         response = self.instance.handle(
             None, "proactiveShoopingList", self.preferences)
-
+        # use regex to compare responses
         expected_response_regex = """{'text': "Today you .*", 'html': "<p>Shall I put the ingredients on the shopping list?</p>", 'follow_up': 'cooking', 'context': 'shoppingList'}"""
 
         self.assertTrue(re.match(expected_response_regex, response))
@@ -47,7 +50,7 @@ class TestCooking(TestCase):
     def test_spotify(self):
         response = self.instance.handle(
             "Yes, can you give me a cooking playlist?", "spotify", self.preferences)
-
+        # use regex to compare responses
         expected_response_regex = """{'text': "I found this playlist. Do you want me to start the playlist?", 'html': '<p>.*</p><div class="img-title-subtitle">.*</div>', 'follow_up': 'cooking', 'context': 'playSpotify.*'}"""
 
         self.assertTrue(re.match(expected_response_regex, response))
