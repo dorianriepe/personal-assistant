@@ -10,8 +10,19 @@ import random
 
 class Cooking:
 
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if Cooking.__instance is None:
+            Cooking()
+        return Cooking.__instance
+
     def __init__(self):
-        return
+        if Cooking.__instance is None:
+            Cooking.__instance = self
+        else:
+            raise Exception("This class is a singleton!")
 
     def handle(self, text, context, preferences):
         """handle function call the right method

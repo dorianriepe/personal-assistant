@@ -27,7 +27,7 @@ def index(request):
 
         welcome = Welcome()
         meeting = Meeting()
-        cooking = Cooking()
+        cooking = Cooking.getInstance()
         evening = Evening()
 
         preferences = json.loads(preferences)
