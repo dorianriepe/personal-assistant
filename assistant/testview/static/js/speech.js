@@ -174,7 +174,7 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
-    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "" || form[0].sttion.value) {
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "" || form[0].sttion.value == "") {
         alert("please fill all fields");
         return false;
     }
