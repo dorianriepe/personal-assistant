@@ -5,7 +5,7 @@ import os
 
 
 class Recipes:
-    
+
     __instance = None
 
     @staticmethod
@@ -50,7 +50,7 @@ class Recipes:
             print("An error occured")
             return
 
-    def get_recipe_by_ingredients(self, ingredients, random_recipes=True, diet="balanced", health=None):
+    def get_recipe_by_ingredients(self, ingredients, random_recipes=False, diet="balanced", health=None):
 
         # ingredients: comma seperated string
         # random_recipes: for multiple searches with same query
