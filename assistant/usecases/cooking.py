@@ -41,11 +41,11 @@ class Cooking:
         elif (context == "shoppingList"):
             response = self.shoppingListResponseHandling(text)
         elif (context == "proactiveCooking"):
-            response = self.askForCooking()
+            response = self.askForCooking(preferences)
         elif (context == "spotify"):
             response = self.spotify(text, preferences)
         elif (context and ("playSpotify" in context)):
-            response = self.playSpotify(text, context, preferences)
+            response = self.playSpotify(text, context)
         else:
             response = self.cookNow(text, preferences)
 
@@ -192,7 +192,8 @@ class Cooking:
             playlist = music.get_playlist("cooking")[0]
 
             # build response
-            text = "I found this playlist. Do you want me to start the playlist?"
+            text = "I found this playlist. Do you want me to start the playlist, " + \
+                preferences["name"] + "?"
             html = html_builder.img_title_subtitle(
                 text="I found this playlist. Do you want me to start the playlist?",
                 title=playlist["name"],
@@ -210,13 +211,12 @@ class Cooking:
 
         return response
 
-    def playSpotify(self, text, context, preferences):
+    def playSpotify(self, text, context):
         """start the given sporify playlist if wanted
 
         Args:
             text (string): spoken text from user
             context (string): the context contains the playlist uri which is used to start the playlist on the device
-            preferences (dict): all user preferences, which are collected over the frontend
 
         Returns:
             response (dict): the response including speaking text, html, context and follow_up usecase (cooking)
@@ -240,7 +240,7 @@ class Cooking:
         return response
 
     #  this is for a proactive call from client
-    def askForCooking(self):
+    def askForCooking(self, preferences):
         """this is for a proactive call from client: Asks user if she/he wants to start coooking now.
 
         Returns:
@@ -248,8 +248,8 @@ class Cooking:
         """
 
         response = {
-            "text": "Hey, have you already cooked? If not, would you like to cook now?",
-            "html": "<p>Hey, have you already cooked? If not, would you like to cook now?</p>",
+            "text": "Hey" + preferences["name"] + ", have you already cooked? If not, would you like to cook now?",
+            "html": "<p>Hey" + preferences["name"] + ", have you already cooked? If not, would you like to cook now?</p>",
             "follow_up": "cooking",
             "context": "cook"
         }
@@ -297,7 +297,8 @@ class Cooking:
 
                 text = "Today you haven't planned anything to eat. But I found a recipe for " + \
                     recipe["recipe_name"] + \
-                    ". Would you like to listen to some music?"
+                    ". Would you like to listen to some music, " + \
+                    preferences, ["name"] + "?"
 
             else:
                 # get a random recipe
@@ -309,7 +310,8 @@ class Cooking:
 
                 text = "Today you have planned " + \
                     recipe["recipe_name"] + \
-                    ". Would you like to listen to some music?"
+                    ". Would you like to listen to some music, " + \
+                    preferences, ["name"] + "?"
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
@@ -321,7 +323,8 @@ class Cooking:
 
             # build response
             html = html_builder.img_title_subtitle(
-                text="Here is your recipe. Would you like to listen to some music?",
+                text="Here is your recipe. Would you like to listen to some music, " +
+                preferences["name"] + "?",
                 title=recipe["recipe_name"],
                 subtitle=str(int(recipe["recipe_time"]))+" min, " +
                 str(recipe["recipe_calories"]) + " calories",
