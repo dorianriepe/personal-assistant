@@ -298,7 +298,7 @@ class Cooking:
                 text = "Today you haven't planned anything to eat. But I found a recipe for " + \
                     recipe["recipe_name"] + \
                     ". Would you like to listen to some music, " + \
-                    preferences, ["name"] + "?"
+                    preferences["name"] + "?"
 
             else:
                 # get a random recipe
@@ -311,7 +311,7 @@ class Cooking:
                 text = "Today you have planned " + \
                     recipe["recipe_name"] + \
                     ". Would you like to listen to some music, " + \
-                    preferences, ["name"] + "?"
+                    preferences["name"] + "?"
 
             # write ingredients to shopping list
             ingredients_list = recipe["recipe_ingredients"]
