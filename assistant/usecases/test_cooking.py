@@ -57,7 +57,7 @@ class TestCooking(TestCase):
 
     def test_playSpotify(self):
         response = self.instance.handle(
-            "Yes, please start this playlist.", "playSpotify", self.preferences)
+            "Yes, please start this playlist.", "playSpotify")
 
         expected_response = {
             "text": None,
@@ -72,14 +72,14 @@ class TestCooking(TestCase):
         response = self.instance.handle(
             None, "proactiveCooking", self.preferences)
 
-        expected_response = {
-            "text": "Hey, have you already cooked? If not, would you like to cook now?",
+        expected_response_regex = {
+            "text": "Hey, have you already cooked .*? If not, would you like to cook now?",
             "html": "<p>Hey, have you already cooked? If not, would you like to cook now?</p>",
             "follow_up": "cooking",
             "context": "cook"
         }
 
-        self.assertEqual(expected_response, response)
+        self.assertTrue(re.match(expected_response_regex, response))
 
 
 if __name__ == '__main__':
