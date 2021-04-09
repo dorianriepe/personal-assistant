@@ -174,7 +174,7 @@ function putCookie(form)
 //this should set the UserName cookie to the proper value;
 {
     var obj = {};
-    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "") {
+    if (form[0].usrname.value == "" || form[0].lcation.value == "" || form[0].bndesliga.value == "" || form[0].clb.value == "" || form[0].nws.value == "" || form[0].dts.value == "" || form[0].hlth.value == "" || form[0].sttion.value == "") {
         alert("please fill all fields");
         return false;
     }
@@ -196,6 +196,8 @@ function putCookie(form)
     obj["club"] = form[0].clb.value;
     obj["diet"] = form[0].dts.value;
     obj["health"] = form[0].hlth.value;
+    obj["station"] = form[0].sttion.value;
+
     // console.log();
     setCookie("userName", JSON.stringify(obj));
     closeNav();
@@ -205,7 +207,7 @@ function putCookie(form)
 
 function getCookie(cname) {
     var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
+    var decodedCookie = decodeURIComponent(unescape(document.cookie));
     var ca = decodedCookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -231,6 +233,7 @@ function checkCookie() {
         document.getElementsByTagName('form')[0].dts.value = data.diet;
         document.getElementsByTagName('form')[0].hlth.value = data.health;
         document.getElementsByTagName('form')[0].nws.value = data.news;
+        document.getElementsByTagName('form')[0].sttion.value = data.station;
         switch (data.news) {
             case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
                 document.getElementsByTagName('form')[0].nws.value = "News York Times";
@@ -273,24 +276,24 @@ function clubs(form) {
 
 
     var clubs2 = [];
-    clubs2[0] = 'VFL Bochum';
-    clubs2[1] = 'Hamburger SV';
-    clubs2[2] = 'Holstein Kiel';
+    clubs2[0] = 'Bochum';
+    clubs2[1] = 'Hamburg';
+    clubs2[2] = 'Kiel';
     clubs2[3] = 'SVgg Greuther Fürth';
-    clubs2[4] = 'Karlsruher SC';
-    clubs2[5] = '1.FC Heidenheim';
-    clubs2[6] = 'Fortuna Düsseldorf';
-    clubs2[7] = 'Hannorver 96';
+    clubs2[4] = 'Karlsruhe';
+    clubs2[5] = 'Heidenheim';
+    clubs2[6] = 'Düsseldorf';
+    clubs2[7] = 'Hannorver';
     clubs2[8] = 'Erzgebirge Aue';
-    clubs2[9] = 'FC St. Pauli';
-    clubs2[10] = 'SC Paderborn 07';
-    clubs2[11] = 'Jahn Regensburg';
-    clubs2[12] = 'SV Darmstadt 98';
-    clubs2[13] = '1.FC Nürnberg';
-    clubs2[14] = 'Eintracht Braunschweig';
-    clubs2[15] = 'Vfl Osnabrück';
-    clubs2[16] = 'SV Sandhausen';
-    clubs2[17] = 'Würzurger Kickers';
+    clubs2[9] = 'St. Pauli';
+    clubs2[10] = 'Paderborn';
+    clubs2[11] = 'Regensburg';
+    clubs2[12] = 'Darmstadt';
+    clubs2[13] = 'Nürnberg';
+    clubs2[14] = 'Braunschweig';
+    clubs2[15] = 'Osnabrück';
+    clubs2[16] = 'Sandhausen';
+    clubs2[17] = 'Würzurger';
     var options = '';
 
     form[0].addEventListener('click', () => {

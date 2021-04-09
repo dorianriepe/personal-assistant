@@ -13,11 +13,12 @@ from datetime import datetime, timedelta
 import pytz
 import json
 
+
 @csrf_exempt
 def index(request):
     if request.method == "POST":
 
-        #print(request.POST)
+        # print(request.POST)
 
         text = request.POST['text'].lower()
         follow_up = request.POST['follow_up']
@@ -26,7 +27,7 @@ def index(request):
 
         welcome = Welcome()
         meeting = Meeting()
-        cooking = Cooking()
+        cooking = Cooking.getInstance()
         evening = Evening()
 
         preferences = json.loads(preferences)
@@ -34,7 +35,7 @@ def index(request):
         if follow_up == "welcome":
             response = welcome.handle(text, context, preferences)
             return JsonResponse(response)
-        
+
         elif follow_up == "meeting":
             response = meeting.handle(text, context, preferences)
             return JsonResponse(response)
@@ -90,19 +91,20 @@ def index(request):
     else:
         return HttpResponse("Coordinator: Please POST data")
 
+
 @csrf_exempt
 def reminder(request):
     if request.method == "POST":
-        
+
         reminders = []
 
         timzone_berlin = pytz.timezone('Europe/Berlin')
         now = datetime.now(timzone_berlin)
 
-        morning_default = datetime.strptime(request.POST['morning_reminder'],'%H:%M')
-        shopping_default = datetime.strptime(request.POST['shopping_reminder'],'%H:%M')
-        cooking_default = datetime.strptime(request.POST['cooking_reminder'],'%H:%M')
-        evening_default = datetime.strptime(request.POST['evening_reminder'],'%H:%M')
+        morning_default = datetime.strptime(request.POST['morning_reminder'], '%H:%M')
+        shopping_default = datetime.strptime(request.POST['shopping_reminder'], '%H:%M')
+        cooking_default = datetime.strptime(request.POST['cooking_reminder'], '%H:%M')
+        evening_default = datetime.strptime(request.POST['evening_reminder'], '%H:%M')
 
         morning = now.replace(hour=morning_default.hour, minute=morning_default.minute)
         shopping = now.replace(hour=shopping_default.hour, minute=shopping_default.minute)
@@ -110,22 +112,22 @@ def reminder(request):
         evening = now.replace(hour=evening_default.hour, minute=evening_default.minute)
 
         calendar = Calendar("ASWE")
-        todays_events = calendar.get_events_today()      
+        todays_events = calendar.get_events_today()
 
         for event in todays_events:
-            event_start = datetime.strptime(event['start'],'%H:%M') + timedelta(minutes = -10)
+            event_start = datetime.strptime(event['start'], '%H:%M') + timedelta(minutes=-10)
             event_start = now.replace(hour=event_start.hour, minute=event_start.minute)
-            reminders.append({"ts": event_start.strftime("%H:%M"), "hour": event_start.hour, "minute": event_start.minute, "usecase": "meeting"})
-        
+            reminders.append({"ts": event_start.strftime( "%H:%M"), "hour": event_start.hour, "minute": event_start.minute, "usecase": "meeting"})
+
         if now < morning:
             reminders.append({"ts": morning.strftime("%H:%M"), "hour": morning.hour, "minute": morning.minute, "usecase": "welcome"})
-        
+
         if now < shopping:
             reminders.append({"ts": shopping.strftime("%H:%M"), "hour": shopping.hour, "minute": shopping.minute, "usecase": "hungry"})
-        
+
         if now < cooking:
             reminders.append({"ts": cooking.strftime("%H:%M"), "hour": cooking.hour, "minute": cooking.minute, "usecase": "hungry"})
-        
+
         if now < evening:
             reminders.append({"ts": evening.strftime("%H:%M"), "hour": evening.hour, "minute": evening.minute, "usecase": "night"})
 
