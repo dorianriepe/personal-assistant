@@ -54,7 +54,7 @@ class Evening:
 
         # check if bundesliga match day
         weekday = datetime.datetime.today().weekday()
-        if weekday == 5 or weekday == 6:
+        if True:
 
             liga = preferences.get("liga", "1.Bundesliga")
             if "1" in liga:
@@ -66,8 +66,10 @@ class Evening:
             spiel = spieltag[0]
 
             fav_team = preferences.get("club", "Dortmund")
+            print(fav_team)
+            #print(spieltag)
             for spiel in spieltag:
-                if spiel["team1ShortName"] == fav_team or spiel["team1ShortName"] == fav_team:
+                if spiel["team1ShortName"] == fav_team or spiel["team2ShortName"] == fav_team:
                     speak_spieltag = spiel["team1ShortName"] + " played " + str(spiel["toreTeam1"])+"-"+str(spiel["toreTeam2"])+" against "+spiel["team2ShortName"]+". "
             speak_spieltag += " Do you want to see the current standings?"
             #speak_spieltag = "The Bundesliga played today. %s played %d to %d against %s. Shall I give you the current standings?" % (
@@ -90,7 +92,8 @@ class Evening:
 
     def bundesligaTable(self, text, preferences):
         
-        if ("yes" in text):
+        positive_text = ['yes', 'ok', 'yeah', 'show', 'table']
+        if any(t in text for t in positive_text):
             liga = preferences.get("liga", "1.Bundesliga")
             if "1" in liga:
                 liga = 1
@@ -136,7 +139,8 @@ class Evening:
 
     def weatherForecast(self, text, preferences):
         
-        if ("yes" in text):
+        positive_text = ['yes', 'ok', 'yeah', 'please', 'nice', 'sure']
+        if any(t in text for t in positive_text):
             
             weather = Weather(preferences["location"])
 
@@ -161,7 +165,8 @@ class Evening:
             return response
 
     def spotify(self, text, preferences):
-        if ("yes" in text):
+        positive_text = ['yes', 'ok', 'yeah', 'please', 'playlist', 'play', 'please']
+        if any(t in text for t in positive_text):
             spotify = Spotify()
             playlist = spotify.get_playlist("sleep")[0]
             text = "I found a playlist for you. Shall I play it?"
@@ -193,7 +198,8 @@ class Evening:
             return response
 
     def spotifyPlay(self, text, context):
-        if ("yes" in text):
+        positive_text = ['yes', 'ok', 'yeah', 'start', 'playlist', 'sure']
+        if any(t in text for t in positive_text):
 
             spotify = Spotify()
             spotify.start_playback(context)

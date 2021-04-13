@@ -82,11 +82,7 @@ $(document).ready(function () {
                 openNav();
                 return;
             }
-            setTimeout(function () {
-                context = null;
-                follow_up = null
-            }, 100000);
-
+            
             $.ajax(
                 {
                     type: "POST",
@@ -103,7 +99,11 @@ $(document).ready(function () {
                             document.body.scrollTop = document.body.scrollHeight;
                             document.documentElement.scrollTop = document.body.scrollHeight;
                             speak(result.text)
-
+                            setTimeout(function () {
+                                context = null;
+                                follow_up = null
+                            }, 300000);
+                            
                         }
 
                     },
