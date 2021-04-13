@@ -82,7 +82,7 @@ def index(request):
                 return JsonResponse(response)
 
             elif any(keyword in text for keyword in keyword_spotify):
-                spotify = Spotify.getInstance()
+                spotify = Spotify()
                 spotify.pause_playback()
                 response = {
                     "text": "The playback has stopped. What do you want me to do next?",
