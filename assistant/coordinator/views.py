@@ -6,6 +6,7 @@ from usecases.welcome import Welcome
 from usecases.meeting import Meeting
 from usecases.cooking import Cooking
 from usecases.evening import Evening
+from wrapper.spotify import Spotify
 
 from wrapper.google_calendar import Calendar
 from datetime import datetime, timedelta
@@ -54,6 +55,7 @@ def index(request):
             keywords_meeting = ["meeting", "appointment"]
             keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
             keywords_evening = ["night", "sleep", "evening"]
+            keyword_spotify =  ["stop", "pause"]
 
             if any(keyword in text for keyword in keywords_welcome):
 
@@ -77,6 +79,17 @@ def index(request):
 
                 response = evening.handle(text, context, preferences)
 
+                return JsonResponse(response)
+
+            elif any(keyword in text for keyword in keyword_spotify):
+                spotify = Spotify()
+                spotify.pause_playback()
+                response = {
+                    "text": "The playback has stopped. What do you want me to do next?",
+                    "html": "<p>The playback has stopped. What do you want me to do next?<p>",
+                    "follow_up": None,
+                    "context": None
+                }
                 return JsonResponse(response)
 
             else:
