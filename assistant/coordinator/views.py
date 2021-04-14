@@ -19,19 +19,17 @@ import json
 def index(request):
     if request.method == "POST":
 
-        # print(request.POST)
-
         text = request.POST['text'].lower()
         follow_up = request.POST['follow_up']
         context = request.POST['context']
         preferences = request.POST['preferences']
+        preferences = json.loads(preferences)
 
         welcome = Welcome()
         meeting = Meeting()
         cooking = Cooking.getInstance()
         evening = Evening()
 
-        preferences = json.loads(preferences)
 
         if follow_up == "welcome":
             response = welcome.handle(text, context, preferences)
@@ -52,9 +50,9 @@ def index(request):
         else:
 
             keywords_welcome = ["welcome", "morning", "hello", "hi"]
-            keywords_meeting = ["meeting", "appointment"]
+            keywords_meeting = ["meeting", "appointment", "next", "lecture"]
             keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
-            keywords_evening = ["night", "sleep", "evening"]
+            keywords_evening = ["night", "sleep", "evening", "today"]
             keyword_spotify =  ["stop", "pause"]
 
             if any(keyword in text for keyword in keywords_welcome):

@@ -321,16 +321,17 @@ class Cooking:
                 google_tasks.add_task_to_list(
                     "shoppingList"+str(today), ingredient)
 
+            text = "Today you have planned" + recipe["recipe_name"] + ". Would you like to listen to some music?"
+
             # build response
             html = html_builder.img_title_subtitle(
-                text="Here is your recipe. Would you like to listen to some music, " +
-                preferences["name"] + "?",
+                text="Here is your recipe. Would you like to listen to some music, " + preferences["name"] + "?",
                 title=recipe["recipe_name"],
-                subtitle=str(int(recipe["recipe_time"]))+" min, " +
-                str(recipe["recipe_calories"]) + " calories",
+                subtitle=str(int(recipe["recipe_time"]))+" min, " + str(recipe["recipe_calories"]) + " calories",
                 image_url=recipe["recipe_image"],
                 link=recipe["recipe_url"]
             )
+
 
             response = {
                 "text": text,
