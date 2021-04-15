@@ -75,7 +75,7 @@ class Spotify:
 
     def start_playback(self, playlist_uri):
 
-        self.get_device_id("iPhone von Nils")
+        self.get_device_id("Dorians MacBook Pro")
 
         if self.deviceID:
 

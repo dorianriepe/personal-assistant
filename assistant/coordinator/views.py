@@ -6,6 +6,7 @@ from usecases.welcome import Welcome
 from usecases.meeting import Meeting
 from usecases.cooking import Cooking
 from usecases.evening import Evening
+from wrapper.spotify import Spotify
 
 from wrapper.google_calendar import Calendar
 from datetime import datetime, timedelta
@@ -18,19 +19,17 @@ import json
 def index(request):
     if request.method == "POST":
 
-        # print(request.POST)
-
         text = request.POST['text'].lower()
         follow_up = request.POST['follow_up']
         context = request.POST['context']
         preferences = request.POST['preferences']
+        preferences = json.loads(preferences)
 
         welcome = Welcome()
         meeting = Meeting()
         cooking = Cooking.getInstance()
         evening = Evening()
 
-        preferences = json.loads(preferences)
 
         if follow_up == "welcome":
             response = welcome.handle(text, context, preferences)
@@ -51,9 +50,10 @@ def index(request):
         else:
 
             keywords_welcome = ["welcome", "morning", "hello", "hi"]
-            keywords_meeting = ["meeting", "appointment"]
+            keywords_meeting = ["meeting", "appointment", "next", "lecture"]
             keywords_cooking = ["food", "eat", "lunch", "dinner", "hungry"]
-            keywords_evening = ["night", "sleep", "evening"]
+            keywords_evening = ["night", "sleep", "evening", "today"]
+            keyword_spotify =  ["stop", "pause"]
 
             if any(keyword in text for keyword in keywords_welcome):
 
@@ -77,6 +77,17 @@ def index(request):
 
                 response = evening.handle(text, context, preferences)
 
+                return JsonResponse(response)
+
+            elif any(keyword in text for keyword in keyword_spotify):
+                spotify = Spotify()
+                spotify.pause_playback()
+                response = {
+                    "text": "The playback has stopped. What do you want me to do next?",
+                    "html": "<p>The playback has stopped. What do you want me to do next?<p>",
+                    "follow_up": None,
+                    "context": None
+                }
                 return JsonResponse(response)
 
             else:

@@ -72,7 +72,7 @@ $(document).ready(function () {
         
         checkReminders();
 
-    }, 100000);
+    }, 20000);
 
 
     var updateIntervalId = setInterval(function() {

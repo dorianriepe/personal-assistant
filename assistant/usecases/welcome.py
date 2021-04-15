@@ -51,7 +51,7 @@ class Welcome:
     text += articleList[0]["description"]+" "
 
     # Get Calendar Information
-    calendar = Calendar("DHBW6")
+    calendar = Calendar("ASWE")
     events = calendar.get_events_today()
     if len(events) == 0:
       text += "Today you have no more entries in your calendar. "
@@ -60,7 +60,7 @@ class Welcome:
 
     # Check if Time for workout
     if self.time_for_workout(events):
-      text += "Do you want to start a workout an listen to some music? "
+      text += "Do you want to start a workout and listen to some music? "
       follow_up = "welcome"
       context = "workout"
     else:
@@ -75,10 +75,10 @@ class Welcome:
 
   def workout(self, text, preferences):
     
-    positive_text = ['yes', 'ok']
+    positive_text = ['yes', 'ok', 'yeah', 'great', 'playlist', 'show']
     if any(t in text for t in positive_text):
 
-      text = "Ok. Should I start the playlist on Spotify?"
+      text = "Ok, Should I start the playlist on Spotify?"
       
       spotify = Spotify()
       spt = spotify.get_playlist("workout")[0]
@@ -93,7 +93,7 @@ class Welcome:
 
   def spotify(self, text, preferences, playback_uri):
     
-    positive_text = ['yes', 'ok']
+    positive_text = ['yes', 'ok', 'yeah', 'great', 'start', 'playlist']
     if any(t in text for t in positive_text):
 
       spotify = Spotify()

@@ -82,11 +82,7 @@ $(document).ready(function () {
                 openNav();
                 return;
             }
-            setTimeout(function () {
-                context = null;
-                follow_up = null
-            }, 100000);
-
+            
             $.ajax(
                 {
                     type: "POST",
@@ -103,7 +99,11 @@ $(document).ready(function () {
                             document.body.scrollTop = document.body.scrollHeight;
                             document.documentElement.scrollTop = document.body.scrollHeight;
                             speak(result.text)
-
+                            setTimeout(function () {
+                                context = null;
+                                follow_up = null
+                            }, 300000);
+                            
                         }
 
                     },
@@ -236,7 +236,7 @@ function checkCookie() {
         document.getElementsByTagName('form')[0].sttion.value = data.station;
         switch (data.news) {
             case "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml":
-                document.getElementsByTagName('form')[0].nws.value = "News York Times";
+                document.getElementsByTagName('form')[0].nws.value = "New York Times";
                 break;
             case "https://www.economist.com/the-world-this-week/rss.xml":
                 document.getElementsByTagName('form')[0].nws.value = "The Economist";
