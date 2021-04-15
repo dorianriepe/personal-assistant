@@ -18,6 +18,13 @@
 
 6. Open [localhost:8000](http://localhost:8000/) in Chrome
 
+## Architektur 
+
+<img width="1435" alt="image" src="https://user-images.githubusercontent.com/44470917/114861787-0402c600-9dee-11eb-8f46-a9faef31c949.png">
+
+<img width="572" alt="image" src="https://user-images.githubusercontent.com/44470917/114861841-1846c300-9dee-11eb-98ee-9e4481bb0763.png">
+
+
 ## UI Elements
 
 ### News
