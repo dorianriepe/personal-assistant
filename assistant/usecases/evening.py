@@ -72,8 +72,6 @@ class Evening:
                 if spiel["team1ShortName"] == fav_team or spiel["team2ShortName"] == fav_team:
                     speak_spieltag = spiel["team1ShortName"] + " played " + str(spiel["toreTeam1"])+"-"+str(spiel["toreTeam2"])+" against "+spiel["team2ShortName"]+". "
             speak_spieltag += " Do you want to see the current standings?"
-            #speak_spieltag = "The Bundesliga played today. %s played %d to %d against %s. Shall I give you the current standings?" % (
-            #    spiel["team1ShortName"], spiel["toreTeam1"], spiel["toreTeam2"], spiel["team2ShortName"])
             speak_meeting = speak_meeting + " " + speak_spieltag
             context = "bundesliga"
 
