@@ -16,7 +16,7 @@
 
 5. Start Server `python3 assistant/manage.py runserver`
 
-6. Open [localhost:8000](http://localhost:8000/)
+6. Open [localhost:8000](http://localhost:8000/) in Chrome
 
 ## UI Elements
 
