@@ -10,9 +10,13 @@
 
 2. `pip install django-cors-headers`
 
-3. Start Server `python3 assistant/manage.py runserver`
+3. `pip install bs4`
 
-4. Open [localhost:8000](http://localhost:8000/)
+4. `pip install google-api-python-client`
+
+5. Start Server `python3 assistant/manage.py runserver`
+
+6. Open [localhost:8000](http://localhost:8000/)
 
 ## UI Elements
 
